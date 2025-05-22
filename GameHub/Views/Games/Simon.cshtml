@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewBag.Title = "Simon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Simon Says 3x3</h1>
+<h4 class="text-center">Poziom: <span id="levelDisplay">0</span></h4>
+
+<p class="text-center">Zapamiętaj i powtórz sekwencję</p>
+
+<div class="text-center mt-2 mb-3">
+    <p id="countdown" style="font-size: 1.5em; color: darkred;"></p>
+</div>
+
+<div class="d-flex justify-content-center">
+    <div id="grid" style="display: grid; grid-template-columns: repeat(3,100px);gap:10px;">
+        @for (int i =0; i < 9; i++)
+            {
+                <div class="cell" data-id="@i" style="width: 100px; height: 100px; background-color: lightgray; border: 1px solid #333;"></div>
+            }
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <button id="startBtn" class="btn btn-primary">Start</button>
+    <p id="status" class="mt-2">Kliknij Start żeby zacząć</p>
+    <p id="timer" class="mt-1 text-muted text-center"></p>
+</div>
+
+<script>
+    const grid = document.querySelectorAll('.cell');
+    const startBtn = document.getElementById('startBtn');
+    const status = document.getElementById('status');
+    const levelDisplay = document.getElementById('levelDisplay');
+    const countdown = document.getElementById('countdown');
+
+    let sequence = [];
+    let playerSequence = [];
+    let level = 0;
+    let clickable = false;
+    let animating = false;
+    let responseTimer = null;
+
+    function getTimeLimitForLevel(lvl) {
+        return 3000 + level * 1500; 
+    }
+    function flash(cell) {
+        animating = true;
+        cell.style.backgroundColor = 'pink';
+        setTimeout(() => {
+            cell.style.backgroundColor = 'lightgray';
+            animating = false;
+        }, 300)
+    }
+
+    function playSequence() {
+        clickable = false;
+        animating = true;
+        let i = 0;
+        const interval = setInterval(() => {
+            flash(grid[sequence[i]]);
+            i++;
+            if (i >= sequence.length) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    clickable = true;
+                    playerSequence = [];
+                    status.textContent = `Twoja kolej!`;
+                    startResponseTimer();
+                    animating = false;
+                }, 500);
+            }
+        }, 600);
+    }
+    function nextRound() {
+        level++;
+        updateLevelDisplay();
+        status.textContent = `Poziom ${level}`;
+        sequence.push(Math.floor(Math.random() * 9));
+        setTimeout(playSequence, 600);
+    }
+
+    function updateLevelDisplay() {
+        levelDisplay.textContent = level;
+    }
+
+    function startGame() {
+        startBtn.disabled = true;
+        sequence = [];
+        level = 0;
+        updateLevelDisplay();
+        status.textContent = "";
+        countdownStart(3); 
+    }
+
+    function countdownStart(seconds) {
+        let counter = seconds;
+        countdown.textContent = `Start za ${counter}...`;
+        const interval = setInterval(() => {
+            counter--;
+            if (counter <= 0) {
+                clearInterval(interval);
+                countdown.textContent = "";
+                nextRound();
+            } else {
+                countdown.textContent = `Start za ${counter}...`;
+            }
+        }, 1000);
+    }
+
+    function startResponseTimer() {
+        clearTimeout(responseTimer);
+        const timeLimit = getTimeLimitForLevel(level);
+        const timerElement = document.getElementById("timer");
+
+        let timeLeft = timeLimit / 1000;
+        timerElement.textContent = `⏰ Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+
+        const interval = setInterval(() => {
+            timeLeft -= 0.1;
+            if (timeLeft <= 0 || !clickable) {
+                clearInterval(interval);
+                timerElement.textContent = "";
+            } else {
+                timerElement.textContent = `⏰ Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+            }
+        }, 100);
+
+        responseTimer = setTimeout(() => {
+            clearInterval(interval);
+            timerElement.textContent = "";
+            status.textContent = `⏰ Czas minął! Twój wynik: ${level - 1}`;
+            clickable = false;
+            startBtn.disabled = false;
+        }, timeLimit);
+    }
+
+    function stopResponseTimer() {
+        clearTimeout(responseTimer);
+    }
+
+    startBtn.onclick = () => {
+        startGame();
+    };
+
+    grid.forEach(cell => {
+        cell.onclick = () => {
+            if (!clickable) return;
+            const id = parseInt(cell.dataset.id);
+            flash(cell);
+            playerSequence.push(id);
+
+            stopResponseTimer();
+
+            if (id !== sequence[playerSequence.length - 1]) {
+                status.textContent = `Błąd! Twój wynik: ${level - 1}`;
+                clickable = false;
+                document.getElementById("timer").textContent = "";
+                startBtn.disabled = false;
+                return;
+            }
+
+            if (playerSequence.length === sequence.length) {
+                clickable = false;
+                setTimeout(nextRound, 800);
+            } else { startResponseTimer(); }
+        };
+    });
+
+</script>
