@@ -125,5 +125,6 @@ namespace GameHub.Controllers
         }
 
         public ActionResult Simon() {  return View(); }
+        public ActionResult AimTrainer() { return View(); }
     }
 }
