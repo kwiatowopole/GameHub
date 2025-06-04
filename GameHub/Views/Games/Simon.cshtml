@@ -48,7 +48,7 @@
     let currentClickPoints = 10;
 
     function getTimeLimitForLevel(lvl) {
-        return 3000 + level * 1500; 
+        return 3000 + level * 1000; 
     }
     function flash(cell) {
         animating = true;
@@ -126,7 +126,7 @@
         timeLeft = timeLimit / 1000;
         const timerElement = document.getElementById("timer");
 
-        timerElement.textContent = `⏰ Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+        timerElement.textContent = `Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
 
         timerInterval = setInterval(() => {
             timeLeft -= 0.1;
@@ -134,14 +134,14 @@
                 clearInterval(timerInterval);
                 timerElement.textContent = "";
             } else {
-                timerElement.textContent = `⏰ Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+                timerElement.textContent = `Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
             }
         }, 100);
 
         responseTimer = setTimeout(() => {
             clearInterval(timerInterval);
             timerElement.textContent = "";
-            status.textContent = `⏰ Czas minął! Twój wynik: ${level - 1}`;
+            status.textContent = `Czas minął! Twój wynik: ${level - 1}`;
             clickable = false;
             startBtn.disabled = false;
         }, timeLimit);
@@ -161,6 +161,15 @@
 
             const id = parseInt(cell.dataset.id);
 
+            if (id !== sequence[playerSequence.length]) {
+                status.textContent = `Błąd! Twój wynik: ${level - 1}`;
+                clickable = false;
+                stopResponseTimer();
+                document.getElementById("timer").textContent = "";
+                startBtn.disabled = false;
+                return;
+            }
+
             flash(cell);
             addFloatingPoints(cell, currentClickPoints);
             points += currentClickPoints;
@@ -171,22 +180,15 @@
 
             stopResponseTimer();
 
-            if (id !== sequence[playerSequence.length - 1]) {
-                status.textContent = `Błąd! Twój wynik: ${level - 1}`;
-                clickable = false;
-                document.getElementById("timer").textContent = "";
-                startBtn.disabled = false;
-                return;
-            }
-
             if (playerSequence.length === sequence.length) {
                 clickable = false;
 
                 try {
                     const maxTime = getTimeLimitForLevel(level) / 1000;
-                    const bonus = Math.floor((timeLeft / maxTime) * 1000);
+                    const bonus = Math.floor((timeLeft / maxTime) * 500);
 
-                    addFloatingPoints(cell, bonus);
+                    const gridContainer = document.getElementById("grid");
+                    addFloatingPoints(gridContainer, bonus);
                     points += bonus;
                     updatePointsDisplay();
                 } catch (e) {
@@ -194,8 +196,6 @@
                 }
 
                 setTimeout(nextRound, 800); 
-            } else {
-                startResponseTimer();
             }
         };
     });
@@ -208,9 +208,12 @@
         const pointsText = document.createElement("div");
         pointsText.textContent = `+${value}`;
         pointsText.style.position = "absolute";
+
         const rect = cell.getBoundingClientRect();
-        pointsText.style.left = rect.left + window.scrollX + 10 + "px";
-        pointsText.style.top = rect.top + window.scrollY + "px";
+
+        pointsText.style.left = rect.left + rect.width / 2 + window.scrollX - 20 + "px";
+        pointsText.style.top = rect.top + rect.height/2 + window.scrollY -20 + "px";
+
         pointsText.style.color = "green";
         pointsText.style.fontWeight = "bold";
         pointsText.style.fontSize = "16px";
@@ -219,6 +222,7 @@
         pointsText.style.pointerEvents = "none";
         pointsText.style.transform = `rotate(${Math.floor(Math.random() * 20 - 10)}deg)`;
         document.body.appendChild(pointsText);
+
         setTimeout(() => {
             pointsText.style.transform += " translateY(-40px)";
             pointsText.style.opacity = "0";
