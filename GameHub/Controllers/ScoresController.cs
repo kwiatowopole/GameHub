@@ -132,5 +132,33 @@ namespace GameHub.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult RankingPartial(string game)
+        {
+            if (string.IsNullOrEmpty(game))
+                return HttpNotFound("Nie podano gry.");
+            var scores = db.Scores
+                .Where(s => s.game.name == game)
+                .OrderByDescending(s => s.points)
+                .Take(20)
+                .ToList();
+
+            return PartialView("RankingPartial", scores);
+        }
+
+        public ActionResult Results(string game = null)
+        {
+
+            ViewBag.Games = db.Games.ToList();
+
+            var scores = db.Scores.Include(s => s.user).Include(s => s.game);
+
+            if (!string.IsNullOrEmpty(game))
+                scores = scores.Where(s => s.game.name == game);
+
+            var resultList = scores.OrderByDescending(s => s.points).ToList();
+
+            return View(resultList);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace GameHub.Models
         public int gameId { get; set; }
         [Required]
         public string name { get; set; }
-        public string description { get; set; }
+        public string Category { get; set; }
         public virtual ICollection<Score> Scores { get; set; }
     }
 }

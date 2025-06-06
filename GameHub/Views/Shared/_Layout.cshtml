@@ -46,6 +46,7 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
+
             @Html.ActionLink("Nazwa aplikacji", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Przełącz nawigację" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +57,16 @@
                     <li>@Html.ActionLink("Strona główna", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Informacje", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Kontakt", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    @if (Session["userId"] != null)
+                    {
+                        <span class="me-2">👤 @Session["username"]</span>
+                        <a href="/Users/Logout" class="btn btn-sm btn-outline-danger">Wyloguj</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Users", new { returnUrl = Request.RawUrl })">Zaloguj się</a>
+                    }
                 </ul>
             </div>
         </div>
@@ -72,4 +83,4 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
-</html>
+</html>     

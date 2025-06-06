@@ -46,7 +46,7 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "gameId,name,description")] Game game)
+        public ActionResult Create([Bind(Include = "gameId,name,Category")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "gameId,name,description")] Game game)
+        public ActionResult Edit([Bind(Include = "gameId,name,Category")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -123,8 +123,15 @@ namespace GameHub.Controllers
             }
             base.Dispose(disposing);
         }
-
+        [Authorize]
         public ActionResult Simon() {  return View(); }
+        [Authorize]
         public ActionResult AimTrainer() { return View(); }
+
+        public ActionResult Browse()
+        {
+            var games = db.Games.ToList().GroupBy(g => g.Category);
+            return View(games);
+        }
     }
 }

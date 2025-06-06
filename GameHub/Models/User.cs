@@ -16,6 +16,10 @@ namespace GameHub.Models
         public string username { get; set; }
         [EmailAddress] public string emailAddress { get; set; }
 
+        [Required]
+        [MaxLength(20)]
+        public string password { get; set; }
+
         public virtual ICollection<Score> Scores { get; set; }
     }
 }

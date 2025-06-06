@@ -138,6 +138,14 @@
     <Compile Include="Migrations\202505192209447_InitialCreate.Designer.cs">
       <DependentUpon>202505192209447_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506041215252_AddPasswordToUser.cs" />
+    <Compile Include="Migrations\202506041215252_AddPasswordToUser.Designer.cs">
+      <DependentUpon>202506041215252_AddPasswordToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506060951004_AddRemoveGameDescCat.cs" />
+    <Compile Include="Migrations\202506060951004_AddRemoveGameDescCat.Designer.cs">
+      <DependentUpon>202506060951004_AddRemoveGameDescCat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDBContext.cs" />
     <Compile Include="Models\Game.cs" />
@@ -213,6 +221,12 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Games\Simon.cshtml" />
     <Content Include="Views\Games\AimTrainer.cshtml" />
+    <Content Include="Views\Scores\RankingPartial.cshtml" />
+    <Content Include="Views\Shared\_GameLayout.cshtml" />
+    <Content Include="Views\Users\Register.cshtml" />
+    <Content Include="Views\Users\Login.cshtml" />
+    <Content Include="Views\Games\Browse.cshtml" />
+    <Content Include="Views\Scores\Results.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -247,6 +261,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202505192209447_InitialCreate.resx">
       <DependentUpon>202505192209447_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506041215252_AddPasswordToUser.resx">
+      <DependentUpon>202506041215252_AddPasswordToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506060951004_AddRemoveGameDescCat.resx">
+      <DependentUpon>202506060951004_AddRemoveGameDescCat.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
