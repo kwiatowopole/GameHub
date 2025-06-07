@@ -123,9 +123,9 @@ namespace GameHub.Controllers
             }
             base.Dispose(disposing);
         }
-        [Authorize]
-        public ActionResult Simon() {  return View(); }
-        [Authorize]
+
+        public ActionResult SimonSays() {  return View(); }
+
         public ActionResult AimTrainer() { return View(); }
 
         public ActionResult Browse()

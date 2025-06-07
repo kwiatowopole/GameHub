@@ -8,8 +8,9 @@ namespace GameHub.Models
 {
     public class User
     {
+
         [Key]
-        public int userId { get; set; }
+        public int userId { get; set ; }
 
         [Required]
         [MaxLength(30)]
@@ -21,5 +22,7 @@ namespace GameHub.Models
         public string password { get; set; }
 
         public virtual ICollection<Score> Scores { get; set; }
+
+        public bool isAdmin { get; set; }
     }
 }

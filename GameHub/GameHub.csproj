@@ -146,6 +146,10 @@
     <Compile Include="Migrations\202506060951004_AddRemoveGameDescCat.Designer.cs">
       <DependentUpon>202506060951004_AddRemoveGameDescCat.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506062233398_UserRole.cs" />
+    <Compile Include="Migrations\202506062233398_UserRole.Designer.cs">
+      <DependentUpon>202506062233398_UserRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDBContext.cs" />
     <Compile Include="Models\Game.cs" />
@@ -219,7 +223,7 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Games\Simon.cshtml" />
+    <Content Include="Views\Games\SimonSays.cshtml" />
     <Content Include="Views\Games\AimTrainer.cshtml" />
     <Content Include="Views\Scores\RankingPartial.cshtml" />
     <Content Include="Views\Shared\_GameLayout.cshtml" />
@@ -267,6 +271,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506060951004_AddRemoveGameDescCat.resx">
       <DependentUpon>202506060951004_AddRemoveGameDescCat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506062233398_UserRole.resx">
+      <DependentUpon>202506062233398_UserRole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

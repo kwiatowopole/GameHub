@@ -46,7 +46,7 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "userId,username,emailAddress, password")] User user)
+        public ActionResult Create([Bind(Include = "userId,username,emailAddress, password, isAdmin")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -78,15 +78,18 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "userId,username,emailAddress, password")] User user)
+        public ActionResult Edit(int id)
         {
-            if (ModelState.IsValid)
+            var userToUpdate = db.Users.Find(id);
+            if (TryUpdateModel(userToUpdate, "", new string[] { "username", "emailAddress", "password", "isAdmin" }))
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            return View(user);
+            return View(userToUpdate);
         }
 
         // GET: Users/Delete/5
