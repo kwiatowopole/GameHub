@@ -28,41 +28,61 @@
             </div>
             <div id="rankingContainer"></div>
         </div>
-
         <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleBtn = document.getElementById("toggleRankingBtn");
-            const hideBtn = document.getElementById("hideRankingBtn");
-            const modal = document.getElementById("rankingModal");
-            const container = document.getElementById("rankingContainer");
 
-            let visible = false;
+            function saveScore(points, gameName) {
+                fetch("/Scores/SaveScore", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        points: points,
+                        gameName: gameName
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Wynik został zapisany");
+                        } else {
+                            console.warn("Błąd zapisu: " + data.message);
+                        }
+                    })
+                    .catch(err => console.error("Błąd połączenia z backendem:", err));
+            }
 
-            toggleBtn.addEventListener("click", () => {
-                if (!visible) {
-                    fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
-                        .then(res => res.text())
-                        .then(html => {
-                            container.innerHTML = html;
-                            modal.style.display = "block";
-                            toggleBtn.textContent = "Schowaj ranking";
-                            visible = true;
-                        });
-                } else {
-                    modal.style.display = "none";
-                    toggleBtn.textContent = "Pokaż ranking";
-                    visible = false;
-                }
-            });
 
-            hideBtn.addEventListener("click", () => {
-                modal.style.display = "none";
-                toggleBtn.textContent = "Pokaż ranking";
-                visible = false;
-            });
-        });
-        </script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggleRankingBtn");
+    const hideBtn = document.getElementById("hideRankingBtn");
+    const modal = document.getElementById("rankingModal");
+    const container = document.getElementById("rankingContainer");
+
+    let visible = false;
+
+    toggleBtn.addEventListener("click", () => {
+        if (!visible) {
+            fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                    modal.style.display = "block";
+                    toggleBtn.textContent = "Schowaj ranking";
+                    visible = true;
+                });
+        } else {
+            modal.style.display = "none";
+            toggleBtn.textContent = "Pokaż ranking";
+            visible = false;
+        }
+    });
+
+    hideBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        toggleBtn.textContent = "Pokaż ranking";
+        visible = false;
+    });
+});</script>
 </body>
 </html>
-s
-

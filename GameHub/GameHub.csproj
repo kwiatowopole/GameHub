@@ -134,6 +134,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Migrations\202505192209447_InitialCreate.cs" />
     <Compile Include="Migrations\202505192209447_InitialCreate.Designer.cs">
       <DependentUpon>202505192209447_InitialCreate.cs</DependentUpon>
@@ -231,6 +232,9 @@
     <Content Include="Views\Users\Login.cshtml" />
     <Content Include="Views\Games\Browse.cshtml" />
     <Content Include="Views\Scores\Results.cshtml" />
+    <Content Include="Views\Games\HoverCursor.cshtml" />
+    <Content Include="Views\Games\GridExperiment.cshtml" />
+    <Content Include="Views\Games\Reflex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

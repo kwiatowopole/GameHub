@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Grid Experiment";
+    Layout = "~/Views/Shared/_GameLayout.cshtml";
+    ViewBag.GameName = "GridExperiment";
+}
+
+<h2>GridExperiment</h2>
+<div class="d-flex justify-content-center mt-3">
+    <div id="grid" style="display: grid; grid-template-columns: repeat(9, 60px); gap: 5px;">
+        @for (int i = 0; i < 63; i++)
+        {
+            <div class="cell"
+                 data-id="@i"
+                 style="width: 60px; height: 60px; background-color: lightgray; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em;">
+            </div>
+        }
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <button id="startBtn" class="btn btn-success">Start</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    const grid = document.querySelectorAll('.cell');
+    const startBtn = document.getElementById('startBtn');
+    const status = document.getElementById('status');
+
+    let sequence = [];         // prawidłowa kolejność klików (cellId)
+    let playerClicks = [];     // co kliknął gracz
+    let currentLevel = 1;
+    let clickable = false;
+
+    function getRandomCellIds(n) {
+        const ids = [...Array(63).keys()];
+        ids.sort(() => Math.random() - 0.5);
+        return ids.slice(0, n);
+    }
+
+    function resetGrid() {
+        grid.forEach(cell => {
+            cell.textContent = '';
+            cell.style.backgroundColor = 'lightgray';
+        });
+    }
+
+    function playSequence() {
+        clickable = false;
+        resetGrid();
+
+        sequence = getRandomCellIds(currentLevel + 2); 
+        let delay = 0;
+        sequence.forEach((cellId, index) => {
+            const cell = grid[cellId];
+            setTimeout(() => {
+                cell.textContent = (index + 3); 
+                cell.style.backgroundColor = getColorByIndex(index);
+            }, delay);
+            delay += 250;
+        });
+
+        setTimeout(() => {
+            clickable = true;
+            status.textContent = `Kliknij liczby od ${3} do ${3 + sequence.length - 1}`;
+        }, delay + 100);
+    }
+
+    function getColorByIndex(i) {
+        const colors = ["#3fa9f5", "#50e3c2", "#f5a623", "#f55", "#b06", "#9c3"];
+        return colors[i % colors.length];
+    }
+
+    function startGame() {
+        playerClicks = [];
+        playSequence();
+    }
+
+    grid.forEach(cell => {
+        cell.addEventListener('click', () => {
+            if (!clickable) return;
+            const id = parseInt(cell.dataset.id);
+            playerClicks.push(id);
+
+            const expectedId = sequence[playerClicks.length - 1];
+            if (id !== expectedId) {
+                status.textContent = "❌ Błędny klik! Koniec gry.";
+                clickable = false;
+                return;
+            }
+
+            cell.style.backgroundColor = "#8f8"; // zielony po kliknięciu
+            if (playerClicks.length === sequence.length) {
+                status.textContent = "✅ Poziom zaliczony!";
+                clickable = false;
+                setTimeout(() => {
+                    currentLevel++;
+                    startGame();
+                }, 1000);
+            }
+        });
+    });
+
+    startBtn.addEventListener('click', () => {
+        currentLevel = 1;
+        startGame();
+    });
+</script>

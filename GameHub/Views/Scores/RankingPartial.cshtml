@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th>Miejsce</th>
-            <th>Gracz</th>
+            <th>Nick</th>
             <th>Punkty</th>
             <th>Data</th>
         </tr>
@@ -18,9 +18,13 @@
             int place = 1;
             foreach (var score in Model)
             {
+                var rowClass = place == 1 ? "background-color: gold;"
+                     : place == 2 ? "background-color: silver;"
+                     : place == 3 ? "background-color: #cd7f32;"
+                     : "";
                 <tr>
                     <td>@place</td>
-                    <td>@score.user?.Username ?? "Anonim"</td>
+                    <td>@(score.user?.username)</td>
                     <td>@score.points</td>
                     <td>@score.date.ToShortDateString()</td>
                 </tr>

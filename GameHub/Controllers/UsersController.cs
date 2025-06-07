@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GameHub.Models;
+using GameHub.Helpers;
 
 namespace GameHub.Controllers
 {
@@ -17,6 +18,10 @@ namespace GameHub.Controllers
         // GET: Users
         public ActionResult Index()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             return View(db.Users.ToList());
         }
 
@@ -26,6 +31,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             User user = db.Users.Find(id);
             if (user == null)
@@ -38,6 +47,10 @@ namespace GameHub.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             return View();
         }
 
@@ -64,6 +77,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             User user = db.Users.Find(id);
             if (user == null)
@@ -98,6 +115,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             User user = db.Users.Find(id);
             if (user == null)
@@ -171,6 +192,7 @@ namespace GameHub.Controllers
             {
                 Session["userId"] = user.userId;
                 Session["username"] = user.username;
+                Session["isAdmin"] = user.isAdmin;
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -190,5 +212,7 @@ namespace GameHub.Controllers
             Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 }

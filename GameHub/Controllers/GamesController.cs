@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GameHub.Models;
+using GameHub.Helpers;
 
 namespace GameHub.Controllers
 {
@@ -17,7 +18,12 @@ namespace GameHub.Controllers
         // GET: Games
         public ActionResult Index()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             return View(db.Games.ToList());
+
         }
 
         // GET: Games/Details/5
@@ -26,6 +32,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             Game game = db.Games.Find(id);
             if (game == null)
@@ -38,6 +48,10 @@ namespace GameHub.Controllers
         // GET: Games/Create
         public ActionResult Create()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             return View();
         }
 
@@ -64,6 +78,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             Game game = db.Games.Find(id);
             if (game == null)
@@ -96,6 +114,10 @@ namespace GameHub.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             Game game = db.Games.Find(id);
             if (game == null)
             {
@@ -124,9 +146,46 @@ namespace GameHub.Controllers
             base.Dispose(disposing);
         }
 
-        public ActionResult SimonSays() {  return View(); }
+        public ActionResult SimonSays() {
+            if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
+            return View(); }
 
-        public ActionResult AimTrainer() { return View(); }
+        public ActionResult AimTrainer() {
+            if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
+            return View(); }
+
+        public ActionResult HoverCursor()
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
+            return View();
+        }
+
+        public ActionResult GridExperiment()
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
+            return View();
+        }
+
+        public ActionResult Reflex()
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
+            return View();
+        }
 
         public ActionResult Browse()
         {

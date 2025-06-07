@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Simon Says";
     Layout = "~/Views/Shared/_GameLayout.cshtml";
-    ViewBag.GameName = "Simon Says";
+    ViewBag.GameName = "SimonSays";
     ViewBag.ShowGameRanking = true;
 }
 
@@ -48,9 +48,10 @@
     let timeLeft = 0;
     let timerInterval;
     let currentClickPoints = 10;
+    const gameName = '@ViewBag.GameName';
 
     function getTimeLimitForLevel(lvl) {
-        return 3000 + level * 1000; 
+        return 3000 + level * 1000;
     }
     function flash(cell) {
         animating = true;
@@ -102,7 +103,7 @@
         updateLevelDisplay();
         updatePointsDisplay();
         status.textContent = "";
-        countdownStart(3); 
+        countdownStart(3);
     }
 
     function countdownStart(seconds) {
@@ -144,6 +145,7 @@
             clearInterval(timerInterval);
             timerElement.textContent = "";
             status.textContent = `Czas minął! Twój wynik: ${level - 1}`;
+            saveScore(score,gameName)
             clickable = false;
             startBtn.disabled = false;
         }, timeLimit);
@@ -167,6 +169,7 @@
                 status.textContent = `Błąd! Twój wynik: ${level - 1}`;
                 clickable = false;
                 stopResponseTimer();
+                saveScore(points, gameName)
                 document.getElementById("timer").textContent = "";
                 startBtn.disabled = false;
                 return;
@@ -197,7 +200,7 @@
                     console.warn("Błąd w bonusie za czas:", e);
                 }
 
-                setTimeout(nextRound, 800); 
+                setTimeout(nextRound, 800);
             }
         };
     });
@@ -231,6 +234,6 @@
         }, 50);
         setTimeout(() => {
             pointsText.remove();
-        }, 1200);
+        }, 1000);
     }
 </script>

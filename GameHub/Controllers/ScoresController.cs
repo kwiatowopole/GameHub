@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GameHub.Models;
+using GameHub.Helpers;
 
 namespace GameHub.Controllers
 {
@@ -17,6 +18,10 @@ namespace GameHub.Controllers
         // GET: Scores
         public ActionResult Index()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             var scores = db.Scores.Include(s => s.game).Include(s => s.user);
             return View(scores.ToList());
         }
@@ -27,6 +32,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             Score score = db.Scores.Find(id);
             if (score == null)
@@ -39,6 +48,10 @@ namespace GameHub.Controllers
         // GET: Scores/Create
         public ActionResult Create()
         {
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             ViewBag.gameId = new SelectList(db.Games, "gameId", "name");
             ViewBag.userId = new SelectList(db.Users, "userId", "username");
             return View();
@@ -58,6 +71,7 @@ namespace GameHub.Controllers
                 return RedirectToAction("Index");
             }
 
+
             ViewBag.gameId = new SelectList(db.Games, "gameId", "name", score.gameId);
             ViewBag.userId = new SelectList(db.Users, "userId", "username", score.userId);
             return View(score);
@@ -69,6 +83,10 @@ namespace GameHub.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
             }
             Score score = db.Scores.Find(id);
             if (score == null)
@@ -105,6 +123,10 @@ namespace GameHub.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            if (!AuthHelper.IsAdmin(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }
             Score score = db.Scores.Find(id);
             if (score == null)
             {
@@ -138,7 +160,10 @@ namespace GameHub.Controllers
             if (string.IsNullOrEmpty(game))
                 return HttpNotFound("Nie podano gry.");
             var scores = db.Scores
+                .Include(s=>s.user)
                 .Where(s => s.game.name == game)
+                .GroupBy(s => s.userId)
+                .Select(g => g.OrderByDescending(s => s.points).FirstOrDefault())
                 .OrderByDescending(s => s.points)
                 .Take(20)
                 .ToList();
@@ -159,6 +184,33 @@ namespace GameHub.Controllers
             var resultList = scores.OrderByDescending(s => s.points).ToList();
 
             return View(resultList);
+        }
+        [HttpPost]
+        public JsonResult SaveScore(int points, string gameName)
+        {
+            using (var db = new AppDBContext())
+            {
+                var userId = (int)Session["userId"];
+
+                var game = db.Games.FirstOrDefault(g => g.name == gameName);
+                if (game == null)
+                {
+                    return Json(new { success = false, message = "Gra nie istnieje" });
+                }
+
+                var score = new Score
+                {
+                    userId = userId,
+                    gameId = game.gameId,
+                    points = points,
+                    date = DateTime.Now
+                };
+
+                db.Scores.Add(score);
+                db.SaveChanges();
+            }
+
+            return Json(new { success = true });
         }
     }
 }

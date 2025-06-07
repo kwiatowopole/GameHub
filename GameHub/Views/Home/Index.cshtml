@@ -1,10 +1,21 @@
-﻿
+﻿@using GameHub.Helpers
 @{
     ViewBag.Title = "Index";
 }
 <h1 class="text-center"> Game Hub</h1>
 <div class="text-center">
     <a href="/Games/Browse" class="btn btn-primary m-2"> Lista Gier </a>
-    <a href="/Scores" class="btn btn-primary m-2"> Wyniki </a>
+    <a href="/Scores/Results" class="btn btn-primary m-2"> Wyniki </a>
 </div>
 
+@if (AuthHelper.IsAdmin(Session))
+{
+    <div class="admin-panel mt-4">
+        <h3>Panel administratora</h3>
+        <div class="btn-group">
+            <a href="@Url.Action("Index", "Users")" class="btn btn-outline-primary m-1">Użytkownicy</a>
+            <a href="@Url.Action("Index", "Games")" class="btn btn-outline-success m-1">Gry</a>
+            <a href="@Url.Action("Index", "Scores")" class="btn btn-outline-secondary m-1">Wyniki</a>
+        </div>
+    </div>
+ }
