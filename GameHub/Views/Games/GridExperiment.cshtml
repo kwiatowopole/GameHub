@@ -3,107 +3,190 @@
     ViewBag.Title = "Grid Experiment";
     Layout = "~/Views/Shared/_GameLayout.cshtml";
     ViewBag.GameName = "GridExperiment";
+    ViewBag.ShowGameRanking = true;
 }
 
-<h2>GridExperiment</h2>
+
+<div class="text-center">
+    <h2>GridExperiment</h2>
+    <h4>Poziom: <span id="levelDisplay">1</span></h4>
+    <h4>Punkty: <span id="pointsDisplay">0</span></h4>
+</div>
 <div class="d-flex justify-content-center mt-3">
-    <div id="grid" style="display: grid; grid-template-columns: repeat(9, 60px); gap: 5px;">
-        @for (int i = 0; i < 63; i++)
+    <div id="grid" style="display: grid; grid-template-columns: repeat(9, 50px); gap: 5px;">
+        @for (int i = 0; i < 45; i++)
         {
             <div class="cell"
                  data-id="@i"
-                 style="width: 60px; height: 60px; background-color: lightgray; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em;">
+                 style="width: 50px; height: 50px; background-color: lightgray; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em;">
             </div>
         }
     </div>
 </div>
-
-<div class="text-center mt-3">
-    <button id="startBtn" class="btn btn-success">Start</button>
-    <p id="status"></p>
+<div class="text-center">
+    <h5><span id="timerDisplay"></span></h5>
 </div>
+    <div class="text-center mt-3">
+        <button id="startBtn" class="btn btn-success">Start</button>
+        <p id="status"></p>
+    </div>
 
-<script>
-    const grid = document.querySelectorAll('.cell');
-    const startBtn = document.getElementById('startBtn');
-    const status = document.getElementById('status');
+    <script>
+        const grid = document.querySelectorAll('.cell');
+        const startBtn = document.getElementById('startBtn');
+        const status = document.getElementById('status');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const pointsDisplay = document.getElementById('pointsDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
 
-    let sequence = [];         // prawidłowa kolejność klików (cellId)
-    let playerClicks = [];     // co kliknął gracz
-    let currentLevel = 1;
-    let clickable = false;
+        const gameName = '@ViewBag.GameName';
+        let sequence = [];
+        let playerSequence = [];
+        let currentLevel = 1;
+        let clickable = false;
+        let points = 0;
+        let timeLeft = 0;
+        let timerInterval;
+        let startTime = 0;
 
-    function getRandomCellIds(n) {
-        const ids = [...Array(63).keys()];
-        ids.sort(() => Math.random() - 0.5);
-        return ids.slice(0, n);
-    }
+        const palette = [
+            "#ffaec9", "#ff77ff", "#a349a4", "#3d85c6",
+            "#9fc5e8", "#76a5af", "#38761d", "#b6d7a8",
+            "#fff200", "#f6b26b", "#cc0000", "#783f04",
+            "#434343", "#999999", "#d9d9d9", "#ffffff"
+        ];
 
-    function resetGrid() {
-        grid.forEach(cell => {
-            cell.textContent = '';
-            cell.style.backgroundColor = 'lightgray';
-        });
-    }
+        function resetGrid() {
+            grid.forEach(cell => {
+                cell.textContent = '';
+                cell.style.backgroundColor = 'lightgray';
+            });
+        }
 
-    function playSequence() {
-        clickable = false;
-        resetGrid();
+        function getRandomCellIds(n) {
+            const ids = [...Array(45).keys()];
+            ids.sort(() => Math.random() - 0.5);
+            return ids.slice(0, n);
+        }
 
-        sequence = getRandomCellIds(currentLevel + 2); 
-        let delay = 0;
-        sequence.forEach((cellId, index) => {
-            const cell = grid[cellId];
-            setTimeout(() => {
-                cell.textContent = (index + 3); 
-                cell.style.backgroundColor = getColorByIndex(index);
-            }, delay);
-            delay += 250;
-        });
-
-        setTimeout(() => {
-            clickable = true;
-            status.textContent = `Kliknij liczby od ${3} do ${3 + sequence.length - 1}`;
-        }, delay + 100);
-    }
-
-    function getColorByIndex(i) {
-        const colors = ["#3fa9f5", "#50e3c2", "#f5a623", "#f55", "#b06", "#9c3"];
-        return colors[i % colors.length];
-    }
-
-    function startGame() {
-        playerClicks = [];
-        playSequence();
-    }
-
-    grid.forEach(cell => {
-        cell.addEventListener('click', () => {
-            if (!clickable) return;
-            const id = parseInt(cell.dataset.id);
-            playerClicks.push(id);
-
-            const expectedId = sequence[playerClicks.length - 1];
-            if (id !== expectedId) {
-                status.textContent = "❌ Błędny klik! Koniec gry.";
-                clickable = false;
-                return;
-            }
-
-            cell.style.backgroundColor = "#8f8"; // zielony po kliknięciu
-            if (playerClicks.length === sequence.length) {
-                status.textContent = "✅ Poziom zaliczony!";
-                clickable = false;
+        function playSequence() {
+            clickable = false;
+            resetGrid();
+            sequence = getRandomCellIds(currentLevel + 2);
+            let delay = 0;
+            sequence.forEach((cellId, index) => {
+                const cell = grid[cellId];
                 setTimeout(() => {
-                    currentLevel++;
-                    startGame();
-                }, 1000);
-            }
-        });
-    });
+                    cell.textContent = index + 1;
+                    cell.style.backgroundColor = palette[index % palette.length];
+                }, delay);
+                delay += 700;
+            });
 
-    startBtn.addEventListener('click', () => {
-        currentLevel = 1;
-        startGame();
-    });
-</script>
+            setTimeout(() => {
+                sequence.forEach(cellId => {
+                    const cell = grid[cellId];
+                    cell.textContent = '';
+                    cell.style.backgroundColor = 'lightgray';
+                });
+
+                playerSequence = [];
+                clickable = true;
+                startResponseTimer();
+            }, delay + 700);
+        }
+
+        function startResponseTimer() {
+            clearInterval(timerInterval);
+            let totalTime = 5000 + currentLevel * 1000;
+            timeLeft = totalTime / 1000;
+            startTime = timeLeft;
+
+            timerDisplay.textContent = `${timeLeft.toFixed(1)}s`;
+
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '';
+                    endGame("Czas minął!");
+                } else {
+                    timerDisplay.textContent = `${timeLeft.toFixed(1)}s`;
+                }
+            }, 100);
+        }
+
+        function addFloatingPoints(cell, value) {
+            const el = document.createElement("div");
+            el.textContent = `+${value}`;
+            el.style.position = "absolute";
+            const rect = cell.getBoundingClientRect();
+            el.style.left = rect.left + rect.width / 2 + window.scrollX + "px";
+            el.style.top = rect.top + rect.height / 2 + window.scrollY + "px";
+            el.style.color = "green";
+            el.style.fontWeight = "bold";
+            el.style.transition = "all 1s ease-out";
+            el.style.zIndex = 1000;
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.style.transform = "translateY(-40px)";
+                el.style.opacity = "0";
+            }, 50);
+            setTimeout(() => el.remove(), 1000);
+        }
+
+        function endGame(message) {
+            clickable = false;
+            clearInterval(timerInterval);
+            timerDisplay.textContent = '';
+            status.textContent = `${message} Twój wynik: ${points}`;
+            startBtn.disabled = false;
+            saveScore(points, gameName);
+        }
+
+        function nextRound() {
+            currentLevel++;
+            playSequence();
+        }
+
+        grid.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (!clickable) return;
+                const id = parseInt(cell.dataset.id);
+                const expectedId = sequence[playerSequence.length];
+
+                if (id !== expectedId) {
+                    endGame("Błąd!");
+                    return;
+                }
+
+                cell.style.backgroundColor = "#8f8";
+                playerSequence.push(id);
+
+                const clickPoints = playerSequence.length * 50;
+                addFloatingPoints(cell, clickPoints);
+                points += clickPoints;
+                pointsDisplay.textContent = points;
+
+                if (playerSequence.length === sequence.length) {
+                    clickable = false;
+                    clearInterval(timerInterval);
+                    const bonus = Math.floor((timeLeft / startTime) * 500);
+                    addFloatingPoints(timerDisplay, bonus);
+                    points += bonus;
+                    pointsDisplay.textContent = points;
+
+                    setTimeout(nextRound, 800);
+                }
+            });
+        });
+
+        startBtn.addEventListener('click', () => {
+            currentLevel = 1;
+            points = 0;
+            pointsDisplay.textContent = "0";
+            status.textContent = '';
+            startBtn.disabled = true;
+            playSequence();
+        });
+    </script>

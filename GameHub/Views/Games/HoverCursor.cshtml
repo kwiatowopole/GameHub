@@ -1,8 +1,194 @@
-﻿
-@{
-    ViewBag.Title = "HoverCursor";
+﻿@{
+    ViewBag.Title = "Hover Cursor";
     Layout = "~/Views/Shared/_GameLayout.cshtml";
+    ViewBag.GameName = "HoverCursor";
+    ViewBag.ShowGameRanking = true;
 }
 
-<h2>HoverCursor</h2>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
 
+<div class="text-center mt-2">
+    <h2>Hover Cursor</h2>
+    <h4>Punkty: <span id="pointsDisplay">0</span></h4>
+</div>
+
+<div id="gameArea" style="position: relative; width: 1000px; height: 700px; margin: 0 auto; background-color: #f0f0f0; overflow: hidden;">
+    <div id="target"
+         style="position: absolute; width: 150px; height: 150px; background-color: #28a745; border-radius: 50%;">
+    </div>
+</div>
+
+<div class="text-center mt-2">
+    <div class="progress mx-auto" style="width: 300px; height: 20px;">
+        <div id="timeBar" class="progress-bar bg-success" role="progressbar" style="width: 100%; transition: width 0.1s ease;">
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <button id="startBtn" class="btn btn-success">Start</button>
+    <p id="gameOverMessage" class="mt-2 text-danger fw-bold"></p>
+</div>
+
+<script>
+    const gameArea = document.getElementById("gameArea");
+    const target = document.getElementById("target");
+    const timeBar = document.getElementById("timeBar");
+    const pointsDisplay = document.getElementById("pointsDisplay");
+    const startBtn = document.getElementById("startBtn");
+    const gameOverMessage = document.getElementById("gameOverMessage");
+
+    let points = 0;
+    let timeLeft = 3.0;
+    let interval, realTimeMoveInterval, directionChangeInterval, teleportInterval;
+    let teleportEnabled = false;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    let targetSize = 180;
+    let targetX = 0;
+    let targetY = 0;
+    let dx = 1;
+    let dy = 1;
+    let targetSpeed = 1.5;
+    let baseSpeed = 1.5;
+
+    function getMaxTime() {
+        return Math.max(1.0, 3 - Math.floor(points / 2500) * 0.5);
+    }
+
+    function updateTargetSize() {
+        const reduction = Math.floor(points / 2000) * 0.1;
+        const newSize = Math.max(60, 180 * (1 - reduction));
+        targetSize = newSize;
+        target.style.width = `${newSize}px`;
+        target.style.height = `${newSize}px`;
+    }
+
+    function updateDisplays() {
+        pointsDisplay.textContent = points;
+        const widthPercent = (timeLeft / getMaxTime()) * 100;
+        timeBar.style.width = `${Math.max(0, widthPercent)}%`;
+    }
+
+    function placeTargetInitial() {
+        const maxX = gameArea.clientWidth - targetSize;
+        const maxY = gameArea.clientHeight - targetSize;
+        targetX = Math.random() * maxX;
+        targetY = Math.random() * maxY;
+        target.style.left = `${targetX}px`;
+        target.style.top = `${targetY}px`;
+    }
+
+    function startRealTimeMovement() {
+        clearInterval(realTimeMoveInterval);
+        realTimeMoveInterval = setInterval(() => {
+            const maxX = gameArea.clientWidth - targetSize;
+            const maxY = gameArea.clientHeight - targetSize;
+
+            targetX += dx * targetSpeed;
+            targetY += dy * targetSpeed;
+
+            if (targetX < 0 || targetX > maxX) {
+                dx *= -1;
+                targetX = Math.max(0, Math.min(maxX, targetX));
+            }
+            if (targetY < 0 || targetY > maxY) {
+                dy *= -1;
+                targetY = Math.max(0, Math.min(maxY, targetY));
+            }
+
+            target.style.left = `${targetX}px`;
+            target.style.top = `${targetY}px`;
+        }, 16);
+    }
+
+    function startRandomDirectionChange() {
+        clearInterval(directionChangeInterval);
+        directionChangeInterval = setInterval(() => {
+            const angle = Math.random() * 2 * Math.PI;
+            dx = Math.cos(angle);
+            dy = Math.sin(angle);
+        }, 1500);
+    }
+
+    function startTeleportCheck() {
+        clearInterval(teleportInterval);
+        teleportInterval = setInterval(() => {
+            if (teleportEnabled && Math.random() < 0.3) {
+                placeTargetInitial();
+            }
+        }, 3000);
+    }
+
+    function updateSpeedByPoints() {
+        const boostCount = Math.floor(points / 3000);
+        targetSpeed = baseSpeed * Math.pow(1.3, boostCount);
+    }
+
+    function startGame() {
+        points = 0;
+        timeLeft = 3.0;
+        baseSpeed = 1.7;
+        teleportEnabled = false;
+        gameOverMessage.textContent = "";
+        updateTargetSize();
+        placeTargetInitial();
+        updateDisplays();
+        startBtn.disabled = true;
+
+        startRealTimeMovement();
+        startRandomDirectionChange();
+        startTeleportCheck();
+
+        clearInterval(interval);
+        interval = setInterval(() => {
+            const rect = target.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const dist = Math.hypot(centerX - mouseX, centerY - mouseY);
+
+            if (dist < targetSize / 2) {
+                let baseGain = 20;
+                baseGain += Math.floor(points / 2000);
+                if (teleportEnabled) baseGain += 5;
+                points += baseGain;
+                timeLeft = Math.min(getMaxTime(), timeLeft + 0.03);
+                target.style.backgroundColor = "#ff7f50"; 
+            } else {
+                timeLeft -= 0.05;
+                target.style.backgroundColor = "#28a745";
+            }
+
+            if (points >= 8000) teleportEnabled = true;
+
+            updateTargetSize();
+            updateSpeedByPoints();
+            updateDisplays();
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                clearInterval(realTimeMoveInterval);
+                clearInterval(directionChangeInterval);
+                clearInterval(teleportInterval);
+                target.style.backgroundColor = "#dc3545";
+                gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
+                startBtn.disabled = false;
+            }
+        }, 100);
+    }
+
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    startBtn.addEventListener('click', startGame);
+</script>

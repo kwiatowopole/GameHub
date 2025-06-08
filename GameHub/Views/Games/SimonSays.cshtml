@@ -144,10 +144,7 @@
         responseTimer = setTimeout(() => {
             clearInterval(timerInterval);
             timerElement.textContent = "";
-            status.textContent = `Czas minął! Twój wynik: ${level - 1}`;
-            saveScore(score,gameName)
-            clickable = false;
-            startBtn.disabled = false;
+            endGame("Czas minął!")
         }, timeLimit);
     }
 
@@ -166,12 +163,7 @@
             const id = parseInt(cell.dataset.id);
 
             if (id !== sequence[playerSequence.length]) {
-                status.textContent = `Błąd! Twój wynik: ${level - 1}`;
-                clickable = false;
-                stopResponseTimer();
-                saveScore(points, gameName)
-                document.getElementById("timer").textContent = "";
-                startBtn.disabled = false;
+                endGame("Zła sekwencja!")
                 return;
             }
 
@@ -204,6 +196,16 @@
             }
         };
     });
+
+    function endGame(message) {
+        clickable = false;
+        clearTimeout(responseTimer);
+        clearInterval(timerInterval);
+        document.getElementById("timer").textContent = "";
+        status.textContent = `${message} Twój wynik: ${points}`;
+        startBtn.disabled = false;
+        saveScore(points, gameName);
+    }
 
     function updatePointsDisplay() {
         document.getElementById("pointsDisplay").textContent = `Punkty: ${points}`;

@@ -162,10 +162,10 @@ namespace GameHub.Controllers
 
         public ActionResult HoverCursor()
         {
-            if (!AuthHelper.IsLoggedIn(Session))
+            /*if (!AuthHelper.IsLoggedIn(Session))
             {
                 return new HttpStatusCodeResult(403); // Forbidden
-            }
+            }*/
             return View();
         }
 
