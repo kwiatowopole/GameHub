@@ -1,7 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Hover Cursor";
+    ViewBag.Title = "Hover Pointer";
     Layout = "~/Views/Shared/_GameLayout.cshtml";
-    ViewBag.GameName = "HoverCursor";
+    ViewBag.GameName = "HoverPointer";
     ViewBag.ShowGameRanking = true;
 }
 
@@ -174,15 +174,21 @@
             updateDisplays();
 
             if (timeLeft <= 0) {
-                clearInterval(interval);
-                clearInterval(realTimeMoveInterval);
-                clearInterval(directionChangeInterval);
-                clearInterval(teleportInterval);
-                target.style.backgroundColor = "#dc3545";
-                gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
-                startBtn.disabled = false;
+                endGame("Koniec gry!")
             }
         }, 100);
+    }
+
+    function endGame(message) {
+        clearInterval(interval);
+        clearInterval(realTimeMoveInterval);
+        clearInterval(directionChangeInterval);
+        clearInterval(teleportInterval);
+        target.style.backgroundColor = "#dc3545";
+        gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
+        status.textContent = `${message} Twój wynik: ${points}`;
+        startBtn.disabled = false;
+        saveScore(points, gameName);
     }
 
     document.addEventListener('mousemove', e => {

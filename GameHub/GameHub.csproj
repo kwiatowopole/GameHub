@@ -232,7 +232,7 @@
     <Content Include="Views\Users\Login.cshtml" />
     <Content Include="Views\Games\Browse.cshtml" />
     <Content Include="Views\Scores\Results.cshtml" />
-    <Content Include="Views\Games\HoverCursor.cshtml" />
+    <Content Include="Views\Games\HoverPointer.cshtml" />
     <Content Include="Views\Games\GridExperiment.cshtml" />
     <Content Include="Views\Games\Reflex.cshtml" />
   </ItemGroup>
