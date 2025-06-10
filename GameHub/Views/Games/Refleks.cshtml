@@ -1,0 +1,122 @@
+﻿@{ ViewBag.Title = "Trener Refleksu"; }
+
+<h1>Reflex</h1>
+<p>Jak najszybciej kliknij w prostokąt, gdy pojawi się 🌸!</p>
+<p>Próba: <span id="attempt">1</span>/5 | Najlepszy czas: <span id="bestTime">0.00</span> s</p>
+
+<div id="gameContainer" style="background-color: #FBE8EC; width: 600px; height: 400px; position: relative; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border: 2px dashed #A65C6B; border-radius: 20px; cursor: pointer;">
+    <canvas id="gameCanvas" width="600" height="400" style="display: none; position: absolute; z-index: 1;"></canvas>
+    <div id="flower" style="display: none; position: absolute; font-size: 48px; user-select: none;">🌸</div>
+
+    <button id="startBtn" style="padding: 10px 20px; font-size: 18px; z-index: 2; cursor: pointer;">Rozpocznij Test</button>
+
+    <div id="resultScreen" style="display:none; text-align: center; z-index: 2;">
+        <h2>Twój refleks:</h2>
+        <p id="reflexLevel" style="font-weight: bold; font-size: 24px;">-</p>
+        <p>Twój czas: <span id="resultTime" style="font-weight: bold;">0.00</span> sekund</p>
+        <p>Najlepszy czas: <span id="resultBestTime" style="font-weight: bold;">0.00</span> sekund</p>
+        <button id="nextBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px; cursor: pointer;">Następna Próba</button>
+    </div>
+</div>
+
+<script>
+    const attemptDisplay = document.getElementById('attempt');
+    const bestTimeDisplay = document.getElementById('bestTime');
+    const startBtn = document.getElementById('startBtn');
+    const resultScreen = document.getElementById('resultScreen');
+    const reflexLevelDisplay = document.getElementById('reflexLevel');
+    const resultTimeDisplay = document.getElementById('resultTime');
+    const resultBestTimeDisplay = document.getElementById('resultBestTime');
+    const nextBtn = document.getElementById('nextBtn');
+    const flower = document.getElementById('flower');
+    const gameContainer = document.getElementById('gameContainer');
+
+    let gameRunning = false;
+    let targetVisible = false;
+    let reactionStartTime = 0;
+    let currentAttempt = 1;
+    const MAX_ATTEMPTS = 5;
+    let bestTime = Infinity;
+    let timeoutId;
+
+    const REFLEX_LEVELS = [
+        { threshold: 600, text: "Jesteś wolny jak żółw! 🐢", color: "red" },
+        { threshold: 400, text: "Nieźle, ale może być lepiej! 🐇", color: "orange" },
+        { threshold: 0, text: "Szybki jak gepard! 🐆", color: "green" }
+    ];
+
+    function showTarget() {
+        const delay = Math.random() * 2000 + 1000;
+        timeoutId = setTimeout(() => {
+            const size = 48; // font-size in px
+            const containerWidth = gameContainer.clientWidth;
+            const containerHeight = gameContainer.clientHeight;
+            const x = Math.random() * (containerWidth - size);
+            const y = Math.random() * (containerHeight - size);
+
+            flower.style.left = `${x}px`;
+            flower.style.top = `${y}px`;
+            flower.style.display = 'block';
+            targetVisible = true;
+            reactionStartTime = Date.now();
+        }, delay);
+    }
+
+    function evaluateReaction(time) {
+        const level = REFLEX_LEVELS.find(l => time >= l.threshold) || REFLEX_LEVELS[REFLEX_LEVELS.length - 1];
+        reflexLevelDisplay.textContent = level.text;
+        reflexLevelDisplay.style.color = level.color;
+        resultTimeDisplay.textContent = time.toFixed(2);
+
+        if (time < bestTime) {
+            bestTime = time;
+            bestTimeDisplay.textContent = time.toFixed(2);
+        }
+        resultBestTimeDisplay.textContent = bestTime.toFixed(2);
+    }
+
+    gameContainer.addEventListener('click', function (event) {
+        if (!gameRunning || !targetVisible) return;
+        const reactionTime = Date.now() - reactionStartTime;
+        targetVisible = false;
+        flower.style.display = 'none';
+        evaluateReaction(reactionTime);
+        resultScreen.style.display = 'block';
+    });
+
+    nextBtn.addEventListener('click', function () {
+        if (currentAttempt < MAX_ATTEMPTS) {
+            currentAttempt++;
+            attemptDisplay.textContent = currentAttempt;
+            resultScreen.style.display = 'none';
+            startTest();
+        } else {
+            resultScreen.style.display = 'none';
+            gameRunning = false;
+            flower.style.display = 'none';
+            startBtn.style.display = 'block';
+            currentAttempt = 1;
+            attemptDisplay.textContent = currentAttempt;
+        }
+    });
+
+    function startTest() {
+        gameRunning = true;
+        startBtn.style.display = 'none';
+        flower.style.display = 'none';
+        showTarget();
+    }
+
+    startBtn.addEventListener('click', function () {
+        startTest();
+    });
+
+    function resetGame() {
+        clearTimeout(timeoutId);
+        gameRunning = false;
+        targetVisible = false;
+        flower.style.display = 'none';
+        resultScreen.style.display = 'none';
+        startBtn.style.display = 'block';
+    }
+</script>

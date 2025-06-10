@@ -1,93 +1,80 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // dopasuj ścieżkę do swojego layoutu
+    ViewBag.Title = "Moja gra - GameHub";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>@ViewBag.Title - GameHub</title>
-    <link rel="stylesheet" href="~/Content/bootstrap.css" />
-    <style>
-        html {
-            overflow-y: scroll;
-        }
-    </style>
-    @RenderSection("Scripts", required: false)
-</head>
-<body>
-    <div class="container mt-4">
-        @RenderBody()
+<div class="container mt-4">
+    @RenderBody()
 
-        <div class="text-center mt-4">
-            <button id="toggleRankingBtn" class="btn btn-outline-success">Pokaż ranking</button>
-        </div>
+    <div class="text-center mt-4">
+        <button id="toggleRankingBtn" class="btn btn-outline-success">Pokaż ranking</button>
+    </div>
 
-        <div id="rankingModal"
-             style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
+    <div id="rankingModal"
+         style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
                 width: 90%; max-width: 600px; background: white; border: 2px solid #444;
                 padding: 20px; z-index: 9999; box-shadow: 0 0 20px rgba(0,0,0,0.4); border-radius: 10px;">
-            <div class="text-end">
-                <button id="hideRankingBtn" class="btn btn-sm btn-danger">×</button>
-            </div>
-            <div id="rankingContainer"></div>
+        <div class="text-end">
+            <button id="hideRankingBtn" class="btn btn-sm btn-danger">×</button>
         </div>
-        <script>
+        <div id="rankingContainer"></div>
+    </div>
+</div>
 
-            function saveScore(points, gameName) {
-                fetch("/Scores/SaveScore", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        points: points,
-                        gameName: gameName
-                    })
+@section Scripts {
+    <script>
+        function saveScore(points, gameName) {
+            fetch("/Scores/SaveScore", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    points: points,
+                    gameName: gameName
                 })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log("Wynik został zapisany");
-                        } else {
-                            console.warn("Błąd zapisu: " + data.message);
-                        }
-                    })
-                    .catch(err => console.error("Błąd połączenia z backendem:", err));
-            }
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const toggleBtn = document.getElementById("toggleRankingBtn");
-    const hideBtn = document.getElementById("hideRankingBtn");
-    const modal = document.getElementById("rankingModal");
-    const container = document.getElementById("rankingContainer");
-
-    let visible = false;
-
-    toggleBtn.addEventListener("click", () => {
-        if (!visible) {
-            fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
-                .then(res => res.text())
-                .then(html => {
-                    container.innerHTML = html;
-                    modal.style.display = "block";
-                    toggleBtn.textContent = "Schowaj ranking";
-                    visible = true;
-                });
-        } else {
-            modal.style.display = "none";
-            toggleBtn.textContent = "Pokaż ranking";
-            visible = false;
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Wynik został zapisany");
+                } else {
+                    console.warn("Błąd zapisu: " + data.message);
+                }
+            })
+            .catch(err => console.error("Błąd połączenia z backendem:", err));
         }
-    });
 
-    hideBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-        toggleBtn.textContent = "Pokaż ranking";
-        visible = false;
-    });
-});</script>
-</body>
-</html>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById("toggleRankingBtn");
+            const hideBtn = document.getElementById("hideRankingBtn");
+            const modal = document.getElementById("rankingModal");
+            const container = document.getElementById("rankingContainer");
+
+            let visible = false;
+
+            toggleBtn.addEventListener("click", () => {
+                if (!visible) {
+                    fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
+                        .then(res => res.text())
+                        .then(html => {
+                            container.innerHTML = html;
+                            modal.style.display = "block";
+                            toggleBtn.textContent = "Schowaj ranking";
+                            visible = true;
+                        });
+                } else {
+                    modal.style.display = "none";
+                    toggleBtn.textContent = "Pokaż ranking";
+                    visible = false;
+                }
+            });
+
+            hideBtn.addEventListener("click", () => {
+                modal.style.display = "none";
+                toggleBtn.textContent = "Pokaż ranking";
+                visible = false;
+            });
+        });
+    </script>
+}

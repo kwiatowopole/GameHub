@@ -1,8 +1,242 @@
-﻿
-@{
-    ViewBag.Title = "AimTrainer";
-    Layout = "~/Views/Shared/_GameLayout.cshtml";
+﻿@{
+    ViewBag.Title = "Trener Celności";
 }
 
-<h2>AimTrainer</h2>
+<h1>Aim Trainer</h1>
+<p>Kliknij cel, aby zdobyć punkty. Kliknięcie w inne miejsce = -250 punktów!</p>
+<p>Runda: <span id="round">1</span>/3 | Level: <span id="level">1</span> | Czas: <span id="time">30.00</span> s | Wynik: <span id="score">0</span></p>
 
+<div id="gameContainer" style="background-color: white; width: 600px; height: 400px; position: relative; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center;">
+    <canvas id="gameCanvas" width="600" height="400" style="display: none;"></canvas>
+
+    <button id="startBtn" style="padding: 10px 20px; font-size: 18px;">Rozpocznij Grę</button>
+
+    <div id="gameOver" style="display:none; text-align: center;">
+        <h2>Koniec Gry!</h2>
+        <p>Twój wynik: <span id="finalScore" style="font-weight: bold; font-size: 24px;">0</span> punktów.</p>
+        <p>Ukończone poziomy: <span id="finalLevel" style="font-weight: bold;">0</span></p>
+        <button id="restartBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px;">Zagraj Ponownie</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score');
+    const timeDisplay = document.getElementById('time');
+    const levelDisplay = document.getElementById('level');
+    const roundDisplay = document.getElementById('round');
+    const gameOverDisplay = document.getElementById('gameOver');
+    const finalScoreDisplay = document.getElementById('finalScore');
+    const finalLevelDisplay = document.getElementById('finalLevel');
+    const restartBtn = document.getElementById('restartBtn');
+    const startBtn = document.getElementById('startBtn');
+    const gameContainer = document.getElementById('gameContainer');
+
+    let score = 0;
+    let timeLeft = 30.00;
+    const totalTime = 30.00;
+    const TIME_PER_HIT = 0.3;
+    let gameRunning = false;
+    let roundStartTime = 0;
+    let currentRound = 1;
+    let currentLevel = 1;
+    const ROUNDS_PER_LEVEL = 3;
+
+    let targets = [];
+    let clickedTargets = new Set();
+
+    const PUNKTY_ZA_PUDLO = -250;
+    const MAKSYMALNY_BONUS = 200;
+    const OKNO_BONUSOWE = 1000;
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function generateTarget() {
+        const radius = Math.floor(Math.random() * 20) + 20;
+        return {
+            x: Math.random() * (canvas.width - 2 * radius) + radius,
+            y: Math.random() * (canvas.height - 2 * radius) + radius,
+            radius: radius,
+            id: crypto.randomUUID(),
+            color: getRandomColor()
+        };
+    }
+
+    function drawTargets() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const target of targets) {
+            ctx.beginPath();
+            ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
+            ctx.fillStyle = target.color;
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+
+    function spawnTargets() {
+        targets = [];
+        clickedTargets.clear();
+        for (let i = 0; i < currentLevel; i++) {
+            targets.push(generateTarget());
+        }
+        roundStartTime = Date.now();
+        drawTargets();
+    }
+
+    function addFloatingPoints(x, y, value) {
+        const pointsText = document.createElement("div");
+        pointsText.textContent = (value > 0 ? "+" : "") + value;
+        pointsText.style.position = "absolute";
+        pointsText.style.left = (x - 20) + "px";
+        pointsText.style.top = (y - 20) + "px";
+        pointsText.style.color = value > 0 ? "green" : "red";
+        pointsText.style.fontWeight = "bold";
+        pointsText.style.fontSize = "20px";
+        pointsText.style.zIndex = 1000;
+        pointsText.style.pointerEvents = "none";
+        pointsText.style.transition = "all 1s ease-out";
+        pointsText.style.transform = `rotate(${Math.floor(Math.random() * 20 - 10)}deg)`;
+
+        document.body.appendChild(pointsText);
+
+        setTimeout(() => {
+            pointsText.style.transform += " translateY(-40px)";
+            pointsText.style.opacity = "0";
+        }, 50);
+        setTimeout(() => {
+            pointsText.remove();
+        }, 1000);
+    }
+
+    function updateTimeDisplay() {
+        const seconds = Math.floor(timeLeft);
+        const milliseconds = Math.floor((timeLeft - seconds) * 100);
+        timeDisplay.textContent = `${seconds}.${milliseconds < 10 ? '0' + milliseconds : milliseconds}`;
+    }
+
+    canvas.addEventListener('click', function (event) {
+        if (!gameRunning) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const clickY = event.clientY - rect.top;
+
+        let hitTargetIndex = -1;
+
+        for (let i = 0; i < targets.length; i++) {
+            const target = targets[i];
+            const dx = clickX - target.x;
+            const dy = clickY - target.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance <= target.radius) {
+                if (!clickedTargets.has(target.id)) {
+                    hitTargetIndex = i;
+                }
+                break;
+            }
+        }
+
+        if (hitTargetIndex !== -1) {
+            const hitTarget = targets[hitTargetIndex];
+            clickedTargets.add(hitTarget.id);
+            targets.splice(hitTargetIndex, 1);
+            drawTargets();
+
+            const basePoints = hitTarget.radius * 10;
+            const reactionTime = Date.now() - roundStartTime;
+            const bonus = Math.max(0, MAKSYMALNY_BONUS * (1 - reactionTime / OKNO_BONUSOWE));
+            const totalPoints = Math.floor(basePoints + bonus);
+
+            score += totalPoints;
+            timeLeft += TIME_PER_HIT;
+            updateTimeDisplay();
+
+            addFloatingPoints(event.clientX, event.clientY, totalPoints);
+
+            if (targets.length === 0) {
+                if (currentRound < ROUNDS_PER_LEVEL) {
+                    currentRound++;
+                    roundDisplay.textContent = `${currentRound}/${ROUNDS_PER_LEVEL}`;
+                    spawnTargets();
+                } else {
+                    currentLevel++;
+                    currentRound = 1;
+                    levelDisplay.textContent = currentLevel;
+                    roundDisplay.textContent = `${currentRound}/${ROUNDS_PER_LEVEL}`;
+                    spawnTargets();
+                }
+            }
+
+        } else {
+            score += PUNKTY_ZA_PUDLO;
+            addFloatingPoints(event.clientX, event.clientY, PUNKTY_ZA_PUDLO);
+        }
+
+        scoreDisplay.textContent = score;
+    });
+
+    function updateTimer() {
+        if (timeLeft > 0) {
+            timeLeft -= 0.01;
+            if (timeLeft < 0) timeLeft = 0;
+            updateTimeDisplay();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        gameRunning = false;
+        clearInterval(timerInterval);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        gameOverDisplay.style.display = 'block';
+        finalScoreDisplay.textContent = score;
+        finalLevelDisplay.textContent = currentLevel - 1;
+        canvas.style.display = 'none';
+    }
+
+    restartBtn.addEventListener('click', () => {
+        resetGame();
+        gameOverDisplay.style.display = 'none';
+    });
+
+    startBtn.addEventListener('click', () => {
+        if (gameRunning) return;
+
+        resetGame();
+        gameRunning = true;
+        startBtn.style.display = 'none';
+        canvas.style.display = 'block';
+        timerInterval = setInterval(updateTimer, 10);
+        spawnTargets();
+    });
+
+    function resetGame() {
+        score = 0;
+        timeLeft = totalTime;
+        currentRound = 1;
+        currentLevel = 1;
+        targets = [];
+        clickedTargets.clear();
+        scoreDisplay.textContent = score;
+        levelDisplay.textContent = currentLevel;
+        roundDisplay.textContent = `${currentRound}/${ROUNDS_PER_LEVEL}`;
+        updateTimeDisplay();
+        gameOverDisplay.style.display = 'none';
+        startBtn.style.display = 'block';
+        canvas.style.display = 'none';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (timerInterval) clearInterval(timerInterval);
+    }
+
+    let timerInterval;
+</script>

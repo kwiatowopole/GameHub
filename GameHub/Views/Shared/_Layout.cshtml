@@ -10,38 +10,59 @@
 
     <style>
         body {
-            background-color: #BBE09F;
-            color: #396146;
+            background-color: #F8E8E8;
+            color: #5C3A41;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            color: #75545F;
+            color: #7C4D57;
         }
 
+
         a, .nav-link {
-            color: #E09FC1 !important;
+            color: #A3C1E1 !important;
+            text-decoration: none;
         }
 
             a:hover, .nav-link:hover {
-                color: #9FE0B5 !important;
+                color: #A3C1E1 !important;
             }
 
+
         footer {
-            color: #75545F;
+            color: #7C4D57;
         }
 
         .navbar {
-            background-color: #396146 !important;
+            background-color: #7B5861 !important;
         }
 
         .navbar-brand, .navbar-nav .nav-link {
-            color: #E09FC1 !important;
+            color: #FBE8EC !important;
         }
 
             .navbar-brand:hover {
-                color: #9FE0B5 !important;
+                color: #FFD1DA !important;
             }
+
+        .btn-outline-danger {
+            border-color: #A65C6B;
+            color: #A65C6B;
+        }
+
+            .btn-outline-danger:hover {
+                background-color: #A65C6B;
+                color: white;
+            }
+
+        .me-2 {
+            color: #5C3A41;
+            font-weight: 500;
+        }
     </style>
+
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -83,4 +104,4 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
-</html>     
+</html>

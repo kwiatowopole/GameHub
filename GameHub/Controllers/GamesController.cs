@@ -154,11 +154,20 @@ namespace GameHub.Controllers
             return View(); }
 
         public ActionResult AimTrainer() {
-            if (!AuthHelper.IsLoggedIn(Session))
+            /*if (!AuthHelper.IsLoggedIn(Session))
             {
                 return new HttpStatusCodeResult(403); // Forbidden
-            }
+            }*/
             return View(); }
+
+        public ActionResult Refleks()
+        {
+            /*if (!AuthHelper.IsLoggedIn(Session))
+            {
+                return new HttpStatusCodeResult(403); // Forbidden
+            }*/
+            return View();
+        }
 
         public ActionResult HoverCursor()
         {
