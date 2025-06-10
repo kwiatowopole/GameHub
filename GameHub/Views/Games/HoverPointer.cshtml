@@ -44,6 +44,7 @@
     const pointsDisplay = document.getElementById("pointsDisplay");
     const startBtn = document.getElementById("startBtn");
     const gameOverMessage = document.getElementById("gameOverMessage");
+    const gameName = '@ViewBag.GameName';
 
     let points = 0;
     let timeLeft = 3.0;
@@ -161,7 +162,7 @@
                 if (teleportEnabled) baseGain += 5;
                 points += baseGain;
                 timeLeft = Math.min(getMaxTime(), timeLeft + 0.03);
-                target.style.backgroundColor = "#ff7f50"; 
+                target.style.backgroundColor = "#ff7f50";
             } else {
                 timeLeft -= 0.05;
                 target.style.backgroundColor = "#28a745";
