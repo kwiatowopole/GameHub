@@ -187,15 +187,6 @@ namespace GameHub.Controllers
             return View();
         }
 
-        public ActionResult Reflex()
-        {
-            if (!AuthHelper.IsLoggedIn(Session))
-            {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }
-            return View();
-        }
-
         public ActionResult Browse()
         {
             var games = db.Games.ToList().GroupBy(g => g.Category);

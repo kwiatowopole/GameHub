@@ -225,7 +225,6 @@
     <Content Include="Views\Scores\Results.cshtml" />
     <Content Include="Views\Games\HoverPointer.cshtml" />
     <Content Include="Views\Games\GridExperiment.cshtml" />
-    <Content Include="Views\Games\Reflex.cshtml" />
     <Content Include="Views\Games\Refleks.cshtml" />
   </ItemGroup>
   <ItemGroup>
