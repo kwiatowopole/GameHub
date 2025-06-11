@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\ViewModelGame.cs" />
+    <Compile Include="Helpers\ViewModelGameCat.cs" />
     <Compile Include="Helpers\ViewModelScore.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.Designer.cs">
@@ -222,7 +223,7 @@
     <Content Include="Views\Scores\Results.cshtml" />
     <Content Include="Views\Games\HoverPointer.cshtml" />
     <Content Include="Views\Games\GridExperiment.cshtml" />
-    <Content Include="Views\Games\Refleks.cshtml" />
+    <Content Include="Views\Games\Reflex.cshtml" />
     <Content Include="Views\Categories\Create.cshtml" />
     <Content Include="Views\Categories\Delete.cshtml" />
     <Content Include="Views\Categories\Details.cshtml" />
@@ -231,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\gifs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

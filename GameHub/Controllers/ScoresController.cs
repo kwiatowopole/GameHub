@@ -158,30 +158,42 @@ namespace GameHub.Controllers
         public ActionResult RankingPartial(string game)
         {
             if (string.IsNullOrEmpty(game))
-                return HttpNotFound("Nie podano gry.");
+                return HttpNotFound("Game not provided.");
             var scores = db.Scores
-                .Include(s=>s.user)
-                .Where(s => s.game.name == game)
-                .GroupBy(s => s.userId)
-                .Select(g => g.OrderByDescending(s => s.points).FirstOrDefault())
-                .OrderByDescending(s => s.points)
-                .Take(20)
-                .ToList();
+        .Include(s => s.user)
+        .Include(s => s.game)
+        .Where(s => s.game.name == game)
+        .OrderByDescending(s => s.points)
+        .Take(10)
+        .Select(s => new GameHub.Helpers.ViewModelScore
+        {
+            GameName = s.game.name,
+            Username = s.user.username,
+            Points = s.points,
+            Date = s.date
+        })
+        .ToList();
 
             return PartialView("RankingPartial", scores);
         }
 
         public ActionResult Results(string game = null)
         {
-
-            ViewBag.Games = db.Games.ToList();
-
             var scores = db.Scores.Include(s => s.user).Include(s => s.game);
 
             if (!string.IsNullOrEmpty(game))
                 scores = scores.Where(s => s.game.name == game);
 
-            var resultList = scores.OrderByDescending(s => s.points).ToList();
+            var resultList = scores
+                .OrderByDescending(s => s.points)
+                .Select(s => new GameHub.Helpers.ViewModelScore
+                {
+                    GameName = s.game.name,
+                    Username = s.user.username,
+                    Points = s.points,
+                    Date = s.date
+                })
+                .ToList();
 
             return View(resultList);
         }
@@ -195,7 +207,7 @@ namespace GameHub.Controllers
                 var game = db.Games.FirstOrDefault(g => g.name == gameName);
                 if (game == null)
                 {
-                    return Json(new { success = false, message = "Gra nie istnieje" });
+                    return Json(new { success = false, message = "No such game" });
                 }
 
                 var score = new Score

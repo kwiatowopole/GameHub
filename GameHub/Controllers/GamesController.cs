@@ -19,7 +19,7 @@ namespace GameHub.Controllers
         {
             { "SimonSays", ("Old school classic Simon Says", "/Content/gifs/simonsays.gif") },
             { "AimTrainer", ("Train your mouse precision", "/Content/gifs/aimtrainer.gif") },
-            { "Refleks", ("Check how fast your reflexes are", "/Content/gifs/refleks.gif") },
+            { "Reflex", ("Check how fast your reflexes are", "/Content/gifs/reflex.gif") },
             { "HoverPointer", ("Can you follow the target precisely?", "/Content/gifs/hoverpointer.gif") },
             { "GridExperiment", ("Check how good your photographic memory is", "/Content/gifs/gridexperiment.gif") }
         };
@@ -166,7 +166,7 @@ namespace GameHub.Controllers
             }*/
             return View(); }
 
-        public ActionResult Refleks()
+        public ActionResult Reflex()
         {
             /*if (!AuthHelper.IsLoggedIn(Session))
             {
@@ -198,10 +198,10 @@ namespace GameHub.Controllers
             var games = db.Games.Include("Category").ToList();
             var grouped = games
                 .GroupBy(g => g.Category)
-                .Select(grp => new
+                .Select(grp => new ViewModelGameCat
                 {
                     Category = grp.Key,
-                    Games = grp.Select(g => new Helpers.ViewModelGame
+                    Games = grp.Select(g => new ViewModelGame
                     {
                         Game = g,
                         Description = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].Description : "",
