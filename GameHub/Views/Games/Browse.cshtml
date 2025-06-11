@@ -4,21 +4,92 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+<style>
+    .games-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: flex-start;
+        margin-top: 32px;
+    }
+
+    .game-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 320px;
+        height: 340px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: #3F2E3E;
+        transition: transform 0.15s, box-shadow 0.15s;
+        padding: 18px 16px;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .game-tile:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 32px rgba(63,46,62,0.18);
+            background: #FFD1DC;
+        }
+
+    .game-thumbnail {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+
+    .game-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .game-desc {
+        font-size: 1.05rem;
+        text-align: center;
+        color: #5a4a5a;
+        flex: 1;
+    }
+</style>
+
+
 <h2>Game List</h2>
 
 @foreach (var group in Model)
 {
     <h3>@group.Category.Name</h3>
-    <div class="row">
+    <div class="row games-grid">
         @foreach (var gameVm in group.Games)
         {
             <div class="col-md-4">
-                <h4>@gameVm.Game.name</h4>
-                @if (!string.IsNullOrEmpty(gameVm.GifUrl))
-                {
-                    <img src="@gameVm.GifUrl" alt="gif" class="img-responsive" />
-                }
-                <p>@gameVm.Description</p>
+                <a href="@Url.Action( gameVm.Game.name, "Games")" class="game-tile">
+                    <div class="game-thumbnail">
+                        @if (!string.IsNullOrEmpty(gameVm.GifUrl))
+                        {
+                            <img src="@gameVm.GifUrl" alt="gif" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+                        }
+                        else
+                        {
+                            <span class="bi bi-controller"></span>
+                        }
+                    </div>
+                    <div class="game-title">@gameVm.Game.name</div>
+                    <div class="game-desc">@gameVm.Description</div>
+                </a>
             </div>
         }
     </div>

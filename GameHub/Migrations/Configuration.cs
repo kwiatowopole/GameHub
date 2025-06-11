@@ -32,7 +32,7 @@
             // 2. Dodaj gry (Games) z przypisaniem CategoryId (klucz obcy)
             context.Games.AddOrUpdate(g => g.name,
                 new Game { name = "AimTrainer", CategoryId = precisionCategory.CategoryId },
-                new Game { name = "Refleks", CategoryId = reflexCategory.CategoryId },
+                new Game { name = "Reflex", CategoryId = reflexCategory.CategoryId },
                 new Game { name = "SimonSays", CategoryId = memoryCategory.CategoryId },
                 new Game { name = "GridExperiment", CategoryId = memoryCategory.CategoryId },
                 new Game { name = "HoverPointer", CategoryId = precisionCategory.CategoryId }

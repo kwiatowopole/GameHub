@@ -207,7 +207,9 @@ namespace GameHub.Controllers
                         Description = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].Description : "",
                         GifUrl = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].GifUrl : ""
                     }).ToList()
-                }).ToList();
+                })
+                .OrderByDescending(cat => cat.Games.Count)
+                .ToList();
 
             return View(grouped);
         }

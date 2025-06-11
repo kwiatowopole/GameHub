@@ -194,7 +194,7 @@ namespace GameHub.Controllers
                     Date = s.date
                 })
                 .ToList();
-
+            ViewBag.Games = db.Games.ToList();
             return View(resultList);
         }
         [HttpPost]
