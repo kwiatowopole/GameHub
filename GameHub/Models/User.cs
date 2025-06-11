@@ -24,5 +24,7 @@ namespace GameHub.Models
         public virtual ICollection<Score> Scores { get; set; }
 
         public bool isAdmin { get; set; }
+
+        public virtual ICollection<FavGame> FavGames { get; set; }
     }
 }

@@ -7,13 +7,13 @@ namespace GameHub.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class UserRole : IMigrationMetadata
+    public sealed partial class Initial2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UserRole));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial2));
         
         string IMigrationMetadata.Id
         {
-            get { return "202506062233398_UserRole"; }
+            get { return "202506111503371_Initial2"; }
         }
         
         string IMigrationMetadata.Source
