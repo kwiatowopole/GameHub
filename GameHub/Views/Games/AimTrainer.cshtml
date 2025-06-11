@@ -3,19 +3,19 @@
 }
 
 <h1>Aim Trainer</h1>
-<p>Kliknij cel, aby zdobyć punkty. Kliknięcie w inne miejsce = -250 punktów!</p>
-<p>Runda: <span id="round">1</span>/3 | Level: <span id="level">1</span> | Czas: <span id="time">30.00</span> s | Wynik: <span id="score">0</span></p>
+<p>Click the target to earn points. Clicking anywhere else = -250 points!</p>
+<p>Round: <span id="round">1</span>/3 | Level: <span id="level">1</span> |Score: <span id="score">0</span> | Time: <span id="time">30.00</span> s </p>
 
 <div id="gameContainer" style="background-color: white; width: 600px; height: 400px; position: relative; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center;">
     <canvas id="gameCanvas" width="600" height="400" style="display: none;"></canvas>
 
-    <button id="startBtn" style="padding: 10px 20px; font-size: 18px;">Rozpocznij Grę</button>
+    <button id="startBtn" style="padding: 10px 20px; font-size: 18px;">Start</button>
 
     <div id="gameOver" style="display:none; text-align: center;">
-        <h2>Koniec Gry!</h2>
-        <p>Twój wynik: <span id="finalScore" style="font-weight: bold; font-size: 24px;">0</span> punktów.</p>
-        <p>Ukończone poziomy: <span id="finalLevel" style="font-weight: bold;">0</span></p>
-        <button id="restartBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px;">Zagraj Ponownie</button>
+        <h2>Game over!!</h2>
+        <p>Final score: <span id="finalScore" style="font-weight: bold; font-size: 24px;">0</span> points.</p>
+        <p>Final level: <span id="finalLevel" style="font-weight: bold;">0</span></p>
+        <button id="restartBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px;">Play again</button>
     </div>
 </div>
 

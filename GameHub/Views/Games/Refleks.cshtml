@@ -1,21 +1,21 @@
-﻿@{ ViewBag.Title = "Trener Refleksu"; }
+﻿@{ ViewBag.Title = "Reflex Trainer"; }
 
 <h1>Reflex</h1>
-<p>Jak najszybciej kliknij w prostokąt, gdy pojawi się 🌸!</p>
-<p>Próba: <span id="attempt">1</span>/5 | Najlepszy czas: <span id="bestTime">0.00</span> s</p>
+<p>Click the rectangle as quickly as possible when the 🌸 appears!</p>
+<p>Attempt: <span id="attempt">1</span>/5 | Best time: <span id="bestTime">0.00</span> s</p>
 
 <div id="gameContainer" style="background-color: #FBE8EC; width: 600px; height: 400px; position: relative; margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center; border: 2px dashed #A65C6B; border-radius: 20px; cursor: pointer;">
     <canvas id="gameCanvas" width="600" height="400" style="display: none; position: absolute; z-index: 1;"></canvas>
     <div id="flower" style="display: none; position: absolute; font-size: 48px; user-select: none;">🌸</div>
 
-    <button id="startBtn" style="padding: 10px 20px; font-size: 18px; z-index: 2; cursor: pointer;">Rozpocznij Test</button>
+    <button id="startBtn" style="padding: 10px 20px; font-size: 18px; z-index: 2; cursor: pointer;">Start</button>
 
     <div id="resultScreen" style="display:none; text-align: center; z-index: 2;">
-        <h2>Twój refleks:</h2>
+        <h2>Reflex level:</h2>
         <p id="reflexLevel" style="font-weight: bold; font-size: 24px;">-</p>
-        <p>Twój czas: <span id="resultTime" style="font-weight: bold;">0.00</span> sekund</p>
-        <p>Najlepszy czas: <span id="resultBestTime" style="font-weight: bold;">0.00</span> sekund</p>
-        <button id="nextBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px; cursor: pointer;">Następna Próba</button>
+        <p>Result time: <span id="resultTime" style="font-weight: bold;">0.00</span> sekund</p>
+        <p>Result best time: <span id="resultBestTime" style="font-weight: bold;">0.00</span> sekund</p>
+        <button id="nextBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px; cursor: pointer;">Next</button>
     </div>
 </div>
 
@@ -40,9 +40,9 @@
     let timeoutId;
 
     const REFLEX_LEVELS = [
-        { threshold: 600, text: "Jesteś wolny jak żółw! 🐢", color: "red" },
-        { threshold: 400, text: "Nieźle, ale może być lepiej! 🐇", color: "orange" },
-        { threshold: 0, text: "Szybki jak gepard! 🐆", color: "green" }
+        { threshold: 600, text: "You are very slooow! 🐢", color: "red" },
+        { threshold: 400, text: "Not so bad! 🐇", color: "orange" },
+        { threshold: 0, text: "You are fast like a cheetah! 🐆", color: "green" }
     ];
 
     function showTarget() {

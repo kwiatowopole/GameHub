@@ -2,20 +2,90 @@
 @{
     ViewBag.Title = "Index";
 }
-<h1 class="text-center"> Game Hub</h1>
+
+<style>
+    .logo-center-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        user-select: none;
+    }
+
+    .logo-gamehub-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-top: 100px;
+    }
+
+    .logo-icon {
+        font-size: 5rem;
+        color: #3F2E3E;
+        transition: color 0.3s ease;
+    }
+
+    .logo-gamehub {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 7rem;
+        color: #3F2E3E;
+        display: flex;
+        gap: 0.1em;
+        transition: color 0.3s ease;
+    }
+
+        .logo-gamehub span {
+            display: block;
+            letter-spacing: 1px;
+        }
+
+    .logo-gamehub-container:hover .logo-icon,
+    .logo-gamehub-container:hover .logo-gamehub {
+        color: #FFD1DC;
+    }
+
+    .tooltip-text {
+        text-align: center;
+        color: #3F2E3E; 
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.3rem;
+        margin-top: 10px;
+        user-select: none;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="logo-center-container" title="Twoje centrum najlepszych gier i wyników">
+    <div class="logo-gamehub-container">
+        <i class="bi bi-cursor logo-icon"></i>
+        <div class="logo-gamehub">
+            <span>G</span>
+            <span>a</span>
+            <span>m</span>
+            <span>e</span>
+            <span>&nbsp;</span>
+            <span>H</span>
+            <span>u</span>
+            <span>b</span>
+        </div>
+    </div>
+    <div class="tooltip-text">Game Hub – Twoje centrum najlepszych gier!</div>
+</div>
+
 <div class="text-center">
-    <a href="/Games/Browse" class="btn btn-primary m-2"> Lista Gier </a>
-    <a href="/Scores/Results" class="btn btn-primary m-2"> Wyniki </a>
+    <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
+    <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
 </div>
 
 @if (AuthHelper.IsAdmin(Session))
 {
-    <div class="admin-panel mt-4">
-        <h3>Panel administratora</h3>
+    <div class="admin-panel mt-4 text-center">
+        <h3>Admin panel</h3>
         <div class="btn-group">
-            <a href="@Url.Action("Index", "Users")" class="btn btn-outline-primary m-1">Użytkownicy</a>
-            <a href="@Url.Action("Index", "Games")" class="btn btn-outline-success m-1">Gry</a>
-            <a href="@Url.Action("Index", "Scores")" class="btn btn-outline-secondary m-1">Wyniki</a>
+            <a href="@Url.Action("Index", "Users")" class="btn btn-outline-primary m-1">Users</a>
+            <a href="@Url.Action("Index", "Games")" class="btn btn-outline-success m-1">Games</a>
+            <a href="@Url.Action("Index", "Scores")" class="btn btn-outline-secondary m-1">Scores</a>
         </div>
     </div>
- }
+}

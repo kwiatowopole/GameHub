@@ -1,103 +1,201 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - moja aplikacja platformy ASP.NET</title>
+    <title>@ViewBag.Title - moja aplikacja ASP.NET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Fonts: Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background-color: #F8E8E8;
-            color: #5C3A41;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #FFF0F3;
+            color: #3F2E3E;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            color: #7C4D57;
+            color: #5E4B56;
         }
 
-
-        a, .nav-link {
-            color: #A3C1E1 !important;
-            text-decoration: none;
+        .sidebar {
+            width: 40px; /* węższy */
+            background-color: #D7B9D8; /* jasny, delikatny kolor jako podstawa */
+            transition: width 0.3s ease, background-color 0.3s ease;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            padding-bottom: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            justify-content: flex-start;
+            gap: 15px;
+            overflow: hidden;
         }
 
-            a:hover, .nav-link:hover {
-                color: #A3C1E1 !important;
+            .sidebar:hover {
+                width: 90px;
+                background-color: #8E6E95; /* Twój oryginalny ciemniejszy kolor */
             }
 
+        .icon-label {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            color: #FDE2F3; /* oryginalny jasny kolor napisów */
+        }
+
+        .sidebar:hover .icon-label {
+            opacity: 1;
+        }
+
+        .logo-container {
+            margin-top: auto;
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #FFD1DC; /* oryginalny kolor logo */
+        }
+
+        .sidebar:hover .logo-container {
+            opacity: 1;
+        }
+
+
+
+        /* Kontener dla napisu na dole */
+        .logo-container {
+            margin-top: auto; /* wypchnie w dół */
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            color: #FFD1DC;
+            font-size: 0.88rem; /* 10% większe niż 0.8rem */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            letter-spacing: 1px;
+            user-select: none;
+            line-height: 1;
+        }
+
+            .logo span {
+                display: block;
+                margin: 1px 0;
+            }
+
+        .icon-link {
+            color: #FDE2F3;
+            font-size: 1.8rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .icon-link:hover {
+                color: #FFB3C6;
+            }
+
+        .icon-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+            color: #FDE2F3;
+            margin-top: 4px;
+            user-select: none;
+        }
+
+        .main-content {
+            padding: 30px;
+            background-color: #FFF0F3;
+            flex-grow: 1;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            line-height: 1.4;
+        }
+
+        .d-flex {
+            display: flex;
+        }
 
         footer {
-            color: #7C4D57;
-        }
-
-        .navbar {
-            background-color: #7B5861 !important;
-        }
-
-        .navbar-brand, .navbar-nav .nav-link {
-            color: #FBE8EC !important;
-        }
-
-            .navbar-brand:hover {
-                color: #FFD1DA !important;
-            }
-
-        .btn-outline-danger {
-            border-color: #A65C6B;
-            color: #A65C6B;
-        }
-
-            .btn-outline-danger:hover {
-                background-color: #A65C6B;
-                color: white;
-            }
-
-        .me-2 {
-            color: #5C3A41;
-            font-weight: 500;
+            margin-top: 40px;
+            color: #6E5A67;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 1rem;
+            text-align: center;
         }
     </style>
-
-
-
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
+    <div class="d-flex">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
 
-            @Html.ActionLink("Nazwa aplikacji", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Przełącz nawigację" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Strona główna", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Informacje", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Kontakt", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+            <a href="@Url.Action("Index", "Home")" class="icon-link" title="Strona główna">
+                <i class="bi bi-house-door-fill"></i>
+                <span class="icon-label">Home</span>
+            </a>
+            <a href="@Url.Action("About", "Home")" class="icon-link" title="O aplikacji">
+                <i class="bi bi-info-circle-fill"></i>
+                <span class="icon-label">About</span>
+            </a>
+            <a href="@Url.Action("Contact", "Home")" class="icon-link" title="Kontakt">
+                <i class="bi bi-envelope-fill"></i>
+                <span class="icon-label">Contact</span>
+            </a>
 
-                    @if (Session["userId"] != null)
-                    {
-                        <span class="me-2">👤 @Session["username"]</span>
-                        <a href="/Users/Logout" class="btn btn-sm btn-outline-danger">Wyloguj</a>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("Login", "Users", new { returnUrl = Request.RawUrl })">Zaloguj się</a>
-                    }
-                </ul>
+            @if (Session["userId"] != null)
+            {
+                <a href="/Users/Logout" class="icon-link" title="Wyloguj">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="icon-label">Logout</span>
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Login", "Users")" class="icon-link" title="Zaloguj się">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span class="icon-label">Login</span>
+                </a>
+            }
+
+            <!-- Napis na dole -->
+            <div class="logo-container">
+                <div class="logo">
+                    <span>G</span>
+                    <span>a</span>
+                    <span>m</span>
+                    <span>e</span>
+                    <span>&nbsp;</span>
+                    <span>H</span>
+                    <span>u</span>
+                    <span>b</span>
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Moja aplikacja ASP.NET</p>
-        </footer>
+
+        <!-- GŁÓWNA TREŚĆ -->
+        <div class="main-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Moja aplikacja ASP.NET</p>
+            </footer>
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
