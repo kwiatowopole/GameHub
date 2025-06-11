@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\ViewModelGame.cs" />
+    <Compile Include="Helpers\ViewModelGameCat.cs" />
     <Compile Include="Helpers\ViewModelScore.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.Designer.cs">

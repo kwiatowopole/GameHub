@@ -198,10 +198,10 @@ namespace GameHub.Controllers
             var games = db.Games.Include("Category").ToList();
             var grouped = games
                 .GroupBy(g => g.Category)
-                .Select(grp => new
+                .Select(grp => new ViewModelGameCat
                 {
                     Category = grp.Key,
-                    Games = grp.Select(g => new Helpers.ViewModelGame
+                    Games = grp.Select(g => new ViewModelGame
                     {
                         Game = g,
                         Description = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].Description : "",
