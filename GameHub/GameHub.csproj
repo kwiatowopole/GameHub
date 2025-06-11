@@ -118,6 +118,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ScoresController.cs" />
@@ -126,9 +127,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
+    <Compile Include="Helpers\ViewModelGame.cs" />
+    <Compile Include="Helpers\ViewModelScore.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.cs" />
     <Compile Include="Migrations\202506111503371_Initial2.Designer.cs">
       <DependentUpon>202506111503371_Initial2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506111707558_Initial2.AppDBContext.cs" />
+    <Compile Include="Migrations\202506111707558_Initial2.AppDBContext.Designer.cs">
+      <DependentUpon>202506111707558_Initial2.AppDBContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDBContext.cs" />
@@ -216,6 +223,11 @@
     <Content Include="Views\Games\HoverPointer.cshtml" />
     <Content Include="Views\Games\GridExperiment.cshtml" />
     <Content Include="Views\Games\Refleks.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\Delete.cshtml" />
+    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -250,6 +262,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202506111503371_Initial2.resx">
       <DependentUpon>202506111503371_Initial2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506111707558_Initial2.AppDBContext.resx">
+      <DependentUpon>202506111707558_Initial2.AppDBContext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

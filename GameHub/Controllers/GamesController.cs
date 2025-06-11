@@ -15,6 +15,15 @@ namespace GameHub.Controllers
     {
         private AppDBContext db = new AppDBContext();
 
+        private static readonly Dictionary<string, (string Description, string GifUrl)> GameMeta = new Dictionary<string, (string, string)>
+        {
+            { "SimonSays", ("Old school classic Simon Says", "/Content/gifs/simonsays.gif") },
+            { "AimTrainer", ("Train your mouse precision", "/Content/gifs/aimtrainer.gif") },
+            { "Refleks", ("Check how fast your reflexes are", "/Content/gifs/refleks.gif") },
+            { "HoverPointer", ("Can you follow the target precisely?", "/Content/gifs/hoverpointer.gif") },
+            { "GridExperiment", ("Check how good your photographic memory is", "/Content/gifs/gridexperiment.gif") }
+        };
+
         // GET: Games
         public ActionResult Index()
         {
@@ -30,18 +39,15 @@ namespace GameHub.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             if (!AuthHelper.IsAdmin(Session))
-            {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }
-            Game game = db.Games.Find(id);
+                return new HttpStatusCodeResult(403);
+
+            Game game = db.Games.Include("Category").FirstOrDefault(g => g.gameId == id);
             if (game == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(game);
         }
 
@@ -52,6 +58,7 @@ namespace GameHub.Controllers
             {
                 return new HttpStatusCodeResult(403); // Forbidden
             }
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View();
         }
 
@@ -60,7 +67,7 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "gameId,name,Category")] Game game)
+        public ActionResult Create([Bind(Include = "gameId,name,CategoryId")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +75,7 @@ namespace GameHub.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View(game);
         }
 
@@ -88,6 +95,7 @@ namespace GameHub.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View(game);
         }
 
@@ -96,7 +104,7 @@ namespace GameHub.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "gameId,name,Category")] Game game)
+        public ActionResult Edit([Bind(Include = "gameId,name,CategoryId")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -104,6 +112,7 @@ namespace GameHub.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View(game);
         }
 
@@ -111,18 +120,15 @@ namespace GameHub.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             if (!AuthHelper.IsAdmin(Session))
-            {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }
-            Game game = db.Games.Find(id);
+                return new HttpStatusCodeResult(403);
+
+            Game game = db.Games.Include("Category").FirstOrDefault(g => g.gameId == id);
             if (game == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(game);
         }
 
@@ -147,10 +153,10 @@ namespace GameHub.Controllers
         }
 
         public ActionResult SimonSays() {
-            if (!AuthHelper.IsLoggedIn(Session))
+            /*if (!AuthHelper.IsLoggedIn(Session))
             {
                 return new HttpStatusCodeResult(403); // Forbidden
-            }
+            }*/
             return View(); }
 
         public ActionResult AimTrainer() {
@@ -171,26 +177,39 @@ namespace GameHub.Controllers
 
         public ActionResult HoverPointer()
         {
-            if (!AuthHelper.IsLoggedIn(Session))
+            /*if (!AuthHelper.IsLoggedIn(Session))
             {
                 return new HttpStatusCodeResult(403); // Forbidden
-            }
+            }*/
             return View();
         }
 
         public ActionResult GridExperiment()
         {
-            if (!AuthHelper.IsLoggedIn(Session))
+            /*if (!AuthHelper.IsLoggedIn(Session))
             {
                 return new HttpStatusCodeResult(403); // Forbidden
-            }
+            }*/
             return View();
         }
 
         public ActionResult Browse()
         {
-            var games = db.Games.ToList().GroupBy(g => g.Category);
-            return View(games);
+            var games = db.Games.Include("Category").ToList();
+            var grouped = games
+                .GroupBy(g => g.Category)
+                .Select(grp => new
+                {
+                    Category = grp.Key,
+                    Games = grp.Select(g => new Helpers.ViewModelGame
+                    {
+                        Game = g,
+                        Description = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].Description : "",
+                        GifUrl = GameMeta.ContainsKey(g.name) ? GameMeta[g.name].GifUrl : ""
+                    }).ToList()
+                }).ToList();
+
+            return View(grouped);
         }
     }
 }

@@ -13,5 +13,7 @@ namespace GameHub.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Score> Scores { get; set; }
+        public DbSet<FavGame> FavGames { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

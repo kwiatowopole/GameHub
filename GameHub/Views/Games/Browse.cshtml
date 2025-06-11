@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IGrouping<string, GameHub.Models.Game>>
+﻿@model IEnumerable<dynamic>
 @{
     ViewBag.Title = "Browse";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,11 +8,18 @@
 
 @foreach (var group in Model)
 {
-    <h3>@group.Key</h3>
-    <ul>
-        @foreach (var game in group)
+    <h3>@group.Category.Name</h3>
+    <div class="row">
+        @foreach (var gameVm in group.Games)
         {
-            <li><a href="@Url.Action(game.name, "Games")">@game.name</a></li>
+            <div class="col-md-4">
+                <h4>@gameVm.Game.name</h4>
+                @if (!string.IsNullOrEmpty(gameVm.GifUrl))
+                {
+                    <img src="@gameVm.GifUrl" alt="gif" class="img-responsive" />
+                }
+                <p>@gameVm.Description</p>
+            </div>
         }
-    </ul>
+    </div>
 }

@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml"; // dopasuj ścieżkę do swojego layoutu
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Moja gra - GameHub";
 }
 
@@ -37,12 +37,12 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    console.log("Wynik został zapisany");
+                    console.log("Score has been saved");
                 } else {
-                    console.warn("Błąd zapisu: " + data.message);
+                    console.warn("Data haven't been saved due to " + data.message);
                 }
             })
-            .catch(err => console.error("Błąd połączenia z backendem:", err));
+            .catch(err => console.error("Error with connection to the BackEnd:", err));
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -60,19 +60,19 @@
                         .then(html => {
                             container.innerHTML = html;
                             modal.style.display = "block";
-                            toggleBtn.textContent = "Schowaj ranking";
+                            toggleBtn.textContent = "Hide Ranking";
                             visible = true;
                         });
                 } else {
                     modal.style.display = "none";
-                    toggleBtn.textContent = "Pokaż ranking";
+                    toggleBtn.textContent = "See Ranking";
                     visible = false;
                 }
             });
 
             hideBtn.addEventListener("click", () => {
                 modal.style.display = "none";
-                toggleBtn.textContent = "Pokaż ranking";
+                toggleBtn.textContent = "See Ranking";
                 visible = false;
             });
         });
