@@ -158,7 +158,7 @@ namespace GameHub.Controllers
         public ActionResult RankingPartial(string game)
         {
             if (string.IsNullOrEmpty(game))
-                return HttpNotFound("Nie podano gry.");
+                return HttpNotFound("Game not provided.");
             var scores = db.Scores
                 .Include(s=>s.user)
                 .Where(s => s.game.name == game)
@@ -195,7 +195,7 @@ namespace GameHub.Controllers
                 var game = db.Games.FirstOrDefault(g => g.name == gameName);
                 if (game == null)
                 {
-                    return Json(new { success = false, message = "Gra nie istnieje" });
+                    return Json(new { success = false, message = "No such game" });
                 }
 
                 var score = new Score
