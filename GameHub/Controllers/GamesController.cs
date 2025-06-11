@@ -19,7 +19,7 @@ namespace GameHub.Controllers
         {
             { "SimonSays", ("Old school classic Simon Says", "/Content/gifs/simonsays.gif") },
             { "AimTrainer", ("Train your mouse precision", "/Content/gifs/aimtrainer.gif") },
-            { "Refleks", ("Check how fast your reflexes are", "/Content/gifs/refleks.gif") },
+            { "Reflex", ("Check how fast your reflexes are", "/Content/gifs/reflex.gif") },
             { "HoverPointer", ("Can you follow the target precisely?", "/Content/gifs/hoverpointer.gif") },
             { "GridExperiment", ("Check how good your photographic memory is", "/Content/gifs/gridexperiment.gif") }
         };
@@ -166,7 +166,7 @@ namespace GameHub.Controllers
             }*/
             return View(); }
 
-        public ActionResult Refleks()
+        public ActionResult Reflex()
         {
             /*if (!AuthHelper.IsLoggedIn(Session))
             {
