@@ -1,16 +1,15 @@
-﻿    @model IEnumerable<GameHub.Models.Score>
+﻿@model IEnumerable<GameHub.Helpers.ViewModelScore>
 @{
     Layout = null;
 }
 
-
 <table class="table table-bordered table-sm text-center mt-3">
     <thead>
         <tr>
-            <th>Miejsce</th>
-            <th>Nick</th>
-            <th>Punkty</th>
-            <th>Data</th>
+            <th>Place</th>
+            <th>Username</th>
+            <th>Points</th>
+            <th>Date</th>
         </tr>
     </thead>
     <tbody>
@@ -24,9 +23,9 @@
                      : "";
                 <tr>
                     <td>@place</td>
-                    <td>@(score.user?.username)</td>
-                    <td>@score.points</td>
-                    <td>@score.date.ToShortDateString()</td>
+                    <td>@score.Username</td>
+                    <td>@score.Points</td>
+                    <td>@score.Date.ToShortDateString()</td>
                 </tr>
                 place++;
             }

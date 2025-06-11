@@ -1,4 +1,4 @@
-﻿@model List<GameHub.Models.Score>
+﻿@model List<GameHub.Helpers.ViewModelScore>
 
 
 @{
@@ -6,28 +6,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Wyniki</h2>
+<h2>Scores</h2>
 
 <form method="get">
-    <label>Wybierz grę:</label>
+    <label>Choose game:</label>
     <select name="game" onchange="this.form.submit()">
-        <option value="">-- wszystkie --</option>
+        <option value="">-- all --</option>
         @foreach (var game in ViewBag.Games as List<GameHub.Models.Game>)
         {
-            <option value="@game.name">@game.name</option>
+            <option value="@game.name" @(Request["game"] == game.name ? "selected" : "")>@game.name</option>
         }
     </select>
 </form>
 
 <table class="table">
-    <tr><th>Nick</th><th>Gra</th><th>Punkty</th><th>Data</th></tr>
+    <tr><th>Username</th><th>Game</th><th>Points</th><th>Date</th></tr>
     @foreach (var s in Model)
     {
         <tr>
-            <td>@s.user.username</td>
-            <td>@s.game.name</td>
-            <td>@s.points</td>
-            <td>@s.date.ToShortDateString()</td>
+            <td>@s.Username</td>
+            <td>@s.GameName</td>
+            <td>@s.Points</td>
+            <td>@s.Date.ToShortDateString()</td>
         </tr>
     }
 </table>
