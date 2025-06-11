@@ -15,5 +15,11 @@ namespace GameHub.Models
         public string Name { get; set; }
 
         public virtual ICollection<Game> Game { get; set; }
+
+        public static implicit operator Category(string v)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
