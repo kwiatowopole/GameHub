@@ -1,7 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Hover Cursor";
+    ViewBag.Title = "Hover Pointer";
     Layout = "~/Views/Shared/_GameLayout.cshtml";
-    ViewBag.GameName = "HoverCursor";
+    ViewBag.GameName = "HoverPointer";
     ViewBag.ShowGameRanking = true;
 }
 
@@ -44,6 +44,7 @@
     const pointsDisplay = document.getElementById("pointsDisplay");
     const startBtn = document.getElementById("startBtn");
     const gameOverMessage = document.getElementById("gameOverMessage");
+    const gameName = '@ViewBag.GameName';
 
     let points = 0;
     let timeLeft = 3.0;
@@ -161,7 +162,7 @@
                 if (teleportEnabled) baseGain += 5;
                 points += baseGain;
                 timeLeft = Math.min(getMaxTime(), timeLeft + 0.03);
-                target.style.backgroundColor = "#ff7f50"; 
+                target.style.backgroundColor = "#ff7f50";
             } else {
                 timeLeft -= 0.05;
                 target.style.backgroundColor = "#28a745";
@@ -174,15 +175,21 @@
             updateDisplays();
 
             if (timeLeft <= 0) {
-                clearInterval(interval);
-                clearInterval(realTimeMoveInterval);
-                clearInterval(directionChangeInterval);
-                clearInterval(teleportInterval);
-                target.style.backgroundColor = "#dc3545";
-                gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
-                startBtn.disabled = false;
+                endGame("Koniec gry!")
             }
         }, 100);
+    }
+
+    function endGame(message) {
+        clearInterval(interval);
+        clearInterval(realTimeMoveInterval);
+        clearInterval(directionChangeInterval);
+        clearInterval(teleportInterval);
+        target.style.backgroundColor = "#dc3545";
+        gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
+        status.textContent = `${message} Twój wynik: ${points}`;
+        startBtn.disabled = false;
+        saveScore(points, gameName);
     }
 
     document.addEventListener('mousemove', e => {
