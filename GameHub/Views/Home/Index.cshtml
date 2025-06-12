@@ -7,35 +7,38 @@
     html, body {
         height: 100%;
         margin: 0;
+    }
+
+    .center-screen {
+        display: flex;
+        flex-direction: column; /* ułożenie w kolumnie */
+        justify-content: flex-start; /* od góry */
+        align-items: center;
+        height: 100vh;
+        padding-top: 20vh; /* zmniejszone przesunięcie w pionie */
         background-color: #FFF0F3;
         font-family: 'Orbitron', sans-serif;
         user-select: none;
-        color: #3F2E3E;
+        text-align: center;
+        gap: 30px;
     }
 
-    /* Kontener centrowany pionowo i poziomo, z paddingiem u góry */
-    .center-container {
+    .logo-wrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        height: 100vh;
-        padding-top: 30vh; /* przesunięcie od góry */
-        text-align: center;
     }
 
-    /* Styl napisu Game Hub */
     .logo-row {
         display: flex;
         align-items: center;
-        gap: 0.35em;
-        font-size: 8vw;
+        gap: 0.4em;
         color: #3F2E3E;
         transition: color 0.3s ease;
-        user-select: none;
+        font-size: 8vw;
     }
 
-    .center-container:hover .logo-row {
+    .logo-wrapper:hover .logo-row {
         color: #FFD1DC;
     }
 
@@ -46,23 +49,13 @@
         letter-spacing: 1px;
     }
 
-    /* Kontener przycisków - obok siebie, wyśrodkowane i blisko napisu */
-    .btn-row {
-        margin-top: 1rem; /* mały odstęp od napisu */
+    .button-group-main {
         display: flex;
-        justify-content: center;
-        gap: 15px; /* odstęp między przyciskami */
-    }
-
-    /* Przyciski niebieskie */
-    .btn-primary {
-        min-width: 120px;
-        font-size: 1.25rem;
-        padding: 0.5rem 1.5rem;
+        gap: 1rem;
     }
 </style>
 
-<div class="center-container">
+<div class="center-screen">
     <div class="logo-wrapper" title="Your game center!">
         <div class="logo-row">
             <i class="bi bi-cursor"></i>
@@ -71,9 +64,9 @@
         <div class="tooltip-text">Your game center!</div>
     </div>
 
-    <div class="btn-row">
-        <a href="/Games/Browse" class="btn btn-primary">Games</a>
-        <a href="/Scores/Results" class="btn btn-primary">Scores</a>
+    <div class="button-group-main">
+        <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
+        <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
     </div>
 </div>
 

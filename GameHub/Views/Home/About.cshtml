@@ -1,8 +1,10 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "About Game Hub";
 }
 
 <style>
+
+
     main {
         display: flex;
         flex-direction: column;
@@ -19,9 +21,9 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 1000px; /* 60% większy od 960 */
-        height: 460px; /* 60% większy od 400 */
-        background-color: #FFD1DC; /* jasny róż */
+        width: 1170px;
+        height: 660px;
+        background-color: #FFD1DC;
         border-radius: 25px;
         transform: translate(-50%, -50%);
         z-index: 5;
@@ -32,10 +34,10 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 960px;
-        height: 400px;
+        width: 1100px;
+        height: 600px;
         background-color: #fffaf3;
-        border-radius: 25px;
+        border-radius: 15px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         transform: translate(-50%, -50%);
         padding: 20px;
@@ -46,10 +48,15 @@
         text-align: left;
         font-size: 1.2rem;
         font-family: inherit;
-        white-space: pre-wrap; /* zachowuje łamanie wierszy */
+        white-space: pre-wrap;
+    }
+
+        .center-rectangle p {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
     }
 </style>
-
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title</h2>
     <h3>@ViewBag.Message</h3>
@@ -57,7 +64,46 @@
     <div class="flower-wrapper" aria-label="Opis projektu">
         <div class="background-rectangle"></div>
         <div class="center-rectangle">
-            Cel projektu, zastosowanie biznesowe, opis kontrolerów, modeli, widoków, bazy danych wraz z jej diagramem.
+
+            <h2>User Manual for Game Hub Application</h2>
+
+            <h3>1. Introduction</h3>
+            <p>Game Hub is a modern web application that allows you to browse games, track player scores, and manage data. The application is intuitive and designed for both regular users and administrators.</p>
+
+            <h3>2. Login and Registration</h3>
+            <p>To use the application, you need to log in or register a new account.</p>
+            <p>The login and registration form is available on the main page (or in a dedicated panel, if available).</p>
+            <p>After logging in, users gain access to features related to scores and favorite games.</p>
+
+            <h3>3. Browsing Games</h3>
+            <p>The "Games" page provides a list of all available games along with their assigned categories.</p>
+            <p>You can sort and filter games to easily find titles that interest you.</p>
+            <p>Clicking on a game’s name will show detailed information about the game and its associated scores.</p>
+
+            <h3>4. Tracking Scores</h3>
+            <p>On the "Scores" page, you can browse rankings for individual games.</p>
+            <p>Scores are displayed in order from highest to lowest points.</p>
+            <p>You can add your own scores by entering points and selecting the game the score refers to.</p>
+
+            <h3>5. Favorite Games</h3>
+            <p>Each user can mark their favorite games for quick access in the future.</p>
+            <p>Favorite games are visible in your profile.</p>
+
+            <h3>6. Administrator Panel</h3>
+            <p>If you have administrator privileges, after logging in you will see the admin panel on the main page.</p>
+            <p>The panel allows you to manage users, games, scores, and categories.</p>
+            <p>You can add, edit, and delete entries in each of these sections.</p>
+
+            <h3>7. Navigation in the Application</h3>
+            <p>The main menu is available on every page, enabling easy access to Games, Scores, Categories, and user settings.</p>
+            <p>Buttons are intuitively labeled to facilitate the use of the application.</p>
+
+            <h3>8. Tips and Help</h3>
+            <p>All interactive elements have tooltips that appear when you hover your mouse over them.</p>
+            <p>If you experience problems with logging in or using the application, please contact the system administrator.</p>
+
         </div>
     </div>
+    <a href="/files/user_guide.docx" target="_blank" rel="noopener noreferrer">More info about Game hub</a>
+
 </main>
