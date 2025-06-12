@@ -7,10 +7,10 @@
 }
 
 <h1 class="text-center">Simon Says 3x3</h1>
-<h4 class="text-center">Poziom: <span id="levelDisplay">0</span></h4>
-<h4 class="text-center">Punkty: <span id="pointsDisplay">0</span></h4>
+<h4 class="text-center">Level: <span id="levelDisplay">0</span></h4>
+<h4 class="text-center">Points: <span id="pointsDisplay">0</span></h4>
 
-<p class="text-center">Zapamiętaj i powtórz sekwencję</p>
+<p class="text-center">Remember and repeat the sequence!</p>
 
 <div class="text-center mt-2 mb-3">
     <p id="countdown" style="font-size: 1.5em; color: darkred;"></p>
@@ -85,7 +85,7 @@
         level++;
         currentClickPoints = 10;
         updateLevelDisplay();
-        status.textContent = `Poziom ${level}`;
+        status.textContent = `Level ${level}`;
         sequence.push(Math.floor(Math.random() * 9));
         setTimeout(playSequence, 600);
     }
@@ -108,7 +108,7 @@
 
     function countdownStart(seconds) {
         let counter = seconds;
-        countdown.textContent = `Start za ${counter}...`;
+        countdown.textContent = `Start in ${counter}...`;
         const interval = setInterval(() => {
             counter--;
             if (counter <= 0) {
@@ -116,7 +116,7 @@
                 countdown.textContent = "";
                 nextRound();
             } else {
-                countdown.textContent = `Start za ${counter}...`;
+                countdown.textContent = `Start in ${counter}...`;
             }
         }, 1000);
     }
@@ -129,7 +129,7 @@
         timeLeft = timeLimit / 1000;
         const timerElement = document.getElementById("timer");
 
-        timerElement.textContent = `Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+        timerElement.textContent = `You have ${timeLeft.toFixed(1)}s for the answer`;
 
         timerInterval = setInterval(() => {
             timeLeft -= 0.1;
@@ -137,14 +137,14 @@
                 clearInterval(timerInterval);
                 timerElement.textContent = "";
             } else {
-                timerElement.textContent = `Masz ${timeLeft.toFixed(1)}s na odpowiedź`;
+                timerElement.textContent = `You have ${timeLeft.toFixed(1)}s for the answer`;
             }
         }, 100);
 
         responseTimer = setTimeout(() => {
             clearInterval(timerInterval);
             timerElement.textContent = "";
-            endGame("Czas minął!")
+            endGame("Time is over!")
         }, timeLimit);
     }
 
@@ -163,7 +163,7 @@
             const id = parseInt(cell.dataset.id);
 
             if (id !== sequence[playerSequence.length]) {
-                endGame("Zła sekwencja!")
+                endGame("Wrong sequence!")
                 return;
             }
 
@@ -189,7 +189,7 @@
                     points += bonus;
                     updatePointsDisplay();
                 } catch (e) {
-                    console.warn("Błąd w bonusie za czas:", e);
+                    console.warn("Time bonus error:", e);
                 }
 
                 setTimeout(nextRound, 800);
@@ -202,13 +202,13 @@
         clearTimeout(responseTimer);
         clearInterval(timerInterval);
         document.getElementById("timer").textContent = "";
-        status.textContent = `${message} Twój wynik: ${points}`;
+        status.textContent = `${message} Your score: ${points}`;
         startBtn.disabled = false;
         saveScore(points, gameName);
     }
 
     function updatePointsDisplay() {
-        document.getElementById("pointsDisplay").textContent = `Punkty: ${points}`;
+        document.getElementById("pointsDisplay").textContent = `Points: ${points}`;
     }
 
     function addFloatingPoints(cell, value) {

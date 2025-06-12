@@ -1,9 +1,37 @@
 ﻿@{
     ViewBag.Title = "About";
 }
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 70vh;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        width: 60%;
+        height: 150px;
+        margin-top: 20px;
+        font-size: 1.1rem;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        resize: vertical;
+        font-family: inherit;
+        text-align: left;
+    }
+</style>
+
 <main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+    <h2 id="title">@ViewBag.Title</h2>
     <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
+    <p></p>
+    <textarea placeholder="  cel projektu, zastosowanie biznesowe, opis kontrolerów, modeli, widoków, bazy danych wraz z jej diagramem. "></textarea>
 </main>

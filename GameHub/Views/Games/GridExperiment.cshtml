@@ -109,7 +109,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     timerDisplay.textContent = '';
-                    endGame("Czas minął!");
+                    endGame("Time is over!");
                 } else {
                     timerDisplay.textContent = `${timeLeft.toFixed(1)}s`;
                 }

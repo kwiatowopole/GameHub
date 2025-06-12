@@ -175,7 +175,7 @@
             updateDisplays();
 
             if (timeLeft <= 0) {
-                endGame("Koniec gry!")
+                endGame("Game over!")
             }
         }, 100);
     }
@@ -186,8 +186,8 @@
         clearInterval(directionChangeInterval);
         clearInterval(teleportInterval);
         target.style.backgroundColor = "#dc3545";
-        gameOverMessage.textContent = `Koniec gry! Twój wynik: ${points}`;
-        status.textContent = `${message} Twój wynik: ${points}`;
+        gameOverMessage.textContent = `Game over! Your score: ${points}`;
+        status.textContent = `${message} Your score: ${points}`;
         startBtn.disabled = false;
         saveScore(points, gameName);
     }
