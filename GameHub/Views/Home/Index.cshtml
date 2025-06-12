@@ -7,36 +7,35 @@
     html, body {
         height: 100%;
         margin: 0;
-    }
-
-    .center-screen {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start; /* przesunięcie do góry */
-        height: 100vh;
-        padding-top: 30vh; /* regulowane przesunięcie w pionie */
         background-color: #FFF0F3;
         font-family: 'Orbitron', sans-serif;
         user-select: none;
-        text-align: center;
+        color: #3F2E3E;
     }
 
-    .logo-wrapper {
+    /* Kontener centrowany pionowo i poziomo, z paddingiem u góry */
+    .center-container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        padding-top: 30vh; /* przesunięcie od góry */
+        text-align: center;
     }
 
+    /* Styl napisu Game Hub */
     .logo-row {
         display: flex;
         align-items: center;
-        gap: 0.4em;
+        gap: 0.35em;
+        font-size: 8vw;
         color: #3F2E3E;
         transition: color 0.3s ease;
-        font-size: 8vw; /* rozmiar dynamiczny */
+        user-select: none;
     }
 
-    .logo-wrapper:hover .logo-row {
+    .center-container:hover .logo-row {
         color: #FFD1DC;
     }
 
@@ -46,9 +45,24 @@
         margin-top: 10px;
         letter-spacing: 1px;
     }
+
+    /* Kontener przycisków - obok siebie, wyśrodkowane i blisko napisu */
+    .btn-row {
+        margin-top: 1rem; /* mały odstęp od napisu */
+        display: flex;
+        justify-content: center;
+        gap: 15px; /* odstęp między przyciskami */
+    }
+
+    /* Przyciski niebieskie */
+    .btn-primary {
+        min-width: 120px;
+        font-size: 1.25rem;
+        padding: 0.5rem 1.5rem;
+    }
 </style>
 
-<div class="center-screen">
+<div class="center-container">
     <div class="logo-wrapper" title="Your game center!">
         <div class="logo-row">
             <i class="bi bi-cursor"></i>
@@ -56,10 +70,11 @@
         </div>
         <div class="tooltip-text">Your game center!</div>
     </div>
-</div>
-<div class="text-center" style="margin-top: 0px;">
-    <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
-    <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
+
+    <div class="btn-row">
+        <a href="/Games/Browse" class="btn btn-primary">Games</a>
+        <a href="/Scores/Results" class="btn btn-primary">Scores</a>
+    </div>
 </div>
 
 @if (AuthHelper.IsAdmin(Session))
@@ -71,7 +86,6 @@
             <a href="@Url.Action("Index", "Games")" class="btn btn-outline-success m-1">Games</a>
             <a href="@Url.Action("Index", "Scores")" class="btn btn-outline-secondary m-1">Scores</a>
             <a href="@Url.Action("Index", "Categories")" class="btn btn-outline-secondary m-1">Categories</a>
-
         </div>
     </div>
 }

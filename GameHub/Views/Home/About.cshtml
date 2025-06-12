@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "About";
 }
+
 <style>
     main {
         display: flex;
@@ -8,23 +9,44 @@
         align-items: center;
         justify-content: center;
         height: 70vh;
-        text-align: center;
         font-family: Arial, sans-serif;
         padding: 20px;
         box-sizing: border-box;
+        text-align: center;
     }
 
-    textarea {
-        width: 60%;
-        height: 150px;
-        margin-top: 20px;
-        font-size: 1.1rem;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        resize: vertical;
-        font-family: inherit;
+    .background-rectangle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1000px; /* 60% większy od 960 */
+        height: 460px; /* 60% większy od 400 */
+        background-color: #FFD1DC; /* jasny róż */
+        border-radius: 25px;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        box-shadow: 0 4px 15px rgba(255, 128, 160, 0.3);
+    }
+
+    .center-rectangle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 960px;
+        height: 400px;
+        background-color: #fffaf3;
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        box-sizing: border-box;
+        z-index: 10;
+        overflow-y: auto;
+        color: #3F2E3E;
         text-align: left;
+        font-size: 1.2rem;
+        font-family: inherit;
+        white-space: pre-wrap; /* zachowuje łamanie wierszy */
     }
 </style>
 
@@ -32,6 +54,10 @@
     <h2 id="title">@ViewBag.Title</h2>
     <h3>@ViewBag.Message</h3>
 
-    <p></p>
-    <textarea placeholder="  cel projektu, zastosowanie biznesowe, opis kontrolerów, modeli, widoków, bazy danych wraz z jej diagramem. "></textarea>
+    <div class="flower-wrapper" aria-label="Opis projektu">
+        <div class="background-rectangle"></div>
+        <div class="center-rectangle">
+            Cel projektu, zastosowanie biznesowe, opis kontrolerów, modeli, widoków, bazy danych wraz z jej diagramem.
+        </div>
+    </div>
 </main>

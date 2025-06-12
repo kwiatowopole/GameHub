@@ -44,14 +44,14 @@
 
             .sidebar:hover {
                 width: 90px;
-                background-color: #8E6E95; 
+                background-color: #8E6E95;
             }
 
         .icon-label {
             opacity: 0;
             transition: opacity 0.3s ease;
             white-space: nowrap;
-            color: #FDE2F3; 
+            color: #FDE2F3;
         }
 
         .sidebar:hover .icon-label {
@@ -70,18 +70,10 @@
             opacity: 1;
         }
 
-
-
-
-        .logo-container {
-            margin-top: auto; 
-            margin-bottom: 10px;
-        }
-
         .logo {
             font-family: 'Orbitron', sans-serif;
             color: #FFD1DC;
-            font-size: 0.88rem; 
+            font-size: 0.88rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -149,6 +141,12 @@
                 <span class="icon-label">Contact</span>
             </a>
 
+            <!-- Ikona serduszka -->
+            <a href="@Url.Action("Favorites", "Home")" class="icon-link" title="Ulubione">
+                <i class="bi bi-heart-fill"></i>
+                <span class="icon-label">Favorites</span>
+            </a>
+
             @if (Session["userId"] != null)
             {
                 <a href="/Users/Logout" class="icon-link" title="Wyloguj">
@@ -181,9 +179,8 @@
 
         <div class="main-content">
             @RenderBody()
-          
-  
         </div>
+
     </div>
 
     @Scripts.Render("~/bundles/jquery")
