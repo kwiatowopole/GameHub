@@ -11,16 +11,14 @@
 
     .center-screen {
         display: flex;
-        flex-direction: column; /* ułożenie w kolumnie */
-        justify-content: flex-start; /* od góry */
-        align-items: center;
+        justify-content: center;
+        align-items: flex-start; /* przesunięcie do góry */
         height: 100vh;
-        padding-top: 30vh; /* zmniejszone przesunięcie w pionie */
+        padding-top: 30vh; /* regulowane przesunięcie w pionie */
         background-color: #FFF0F3;
         font-family: 'Orbitron', sans-serif;
         user-select: none;
         text-align: center;
-        gap: 30px; /* odstęp między elementami */
     }
 
     .logo-wrapper {
@@ -48,11 +46,6 @@
         margin-top: 10px;
         letter-spacing: 1px;
     }
-
-    .button-group-main {
-        display: flex;
-        gap: 1rem;
-    }
 </style>
 
 <div class="center-screen">
@@ -63,11 +56,10 @@
         </div>
         <div class="tooltip-text">Your game center!</div>
     </div>
-
-    <div class="button-group-main">
-        <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
-        <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
-    </div>
+</div>
+<div class="text-center" style="margin-top: 0px;">
+    <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
+    <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
 </div>
 
 @if (AuthHelper.IsAdmin(Session))
@@ -79,6 +71,7 @@
             <a href="@Url.Action("Index", "Games")" class="btn btn-outline-success m-1">Games</a>
             <a href="@Url.Action("Index", "Scores")" class="btn btn-outline-secondary m-1">Scores</a>
             <a href="@Url.Action("Index", "Categories")" class="btn btn-outline-secondary m-1">Categories</a>
+
         </div>
     </div>
 }
