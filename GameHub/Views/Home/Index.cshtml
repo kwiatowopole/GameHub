@@ -4,76 +4,60 @@
 }
 
 <style>
-    .logo-center-container {
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .center-screen {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* przesunięcie do góry */
+        height: 100vh;
+        padding-top: 30vh; /* regulowane przesunięcie w pionie */
+        background-color: #FFF0F3;
+        font-family: 'Orbitron', sans-serif;
+        user-select: none;
+        text-align: center;
+    }
+
+    .logo-wrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 20px;
-        user-select: none;
     }
 
-    .logo-gamehub-container {
+    .logo-row {
         display: flex;
         align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        margin-top: 100px;
-    }
-
-    .logo-icon {
-        font-size: 5rem;
+        gap: 0.4em;
         color: #3F2E3E;
         transition: color 0.3s ease;
+        font-size: 8vw; /* rozmiar dynamiczny */
     }
 
-    .logo-gamehub {
-        font-family: 'Orbitron', sans-serif;
-        font-size: 7rem;
-        color: #3F2E3E;
-        display: flex;
-        gap: 0.1em;
-        transition: color 0.3s ease;
-    }
-
-        .logo-gamehub span {
-            display: block;
-            letter-spacing: 1px;
-        }
-
-    .logo-gamehub-container:hover .logo-icon,
-    .logo-gamehub-container:hover .logo-gamehub {
+    .logo-wrapper:hover .logo-row {
         color: #FFD1DC;
     }
 
     .tooltip-text {
-        text-align: center;
-        color: #3F2E3E; 
-        font-family: 'Orbitron', sans-serif;
-        font-size: 1.3rem;
+        font-size: 1.5vw;
+        color: #3F2E3E;
         margin-top: 10px;
-        user-select: none;
         letter-spacing: 1px;
     }
 </style>
 
-<div class="logo-center-container" title="Twoje centrum najlepszych gier i wyników">
-    <div class="logo-gamehub-container">
-        <i class="bi bi-cursor logo-icon"></i>
-        <div class="logo-gamehub">
-            <span>G</span>
-            <span>a</span>
-            <span>m</span>
-            <span>e</span>
-            <span>&nbsp;</span>
-            <span>H</span>
-            <span>u</span>
-            <span>b</span>
+<div class="center-screen">
+    <div class="logo-wrapper" title="Your game center!">
+        <div class="logo-row">
+            <i class="bi bi-cursor"></i>
+            <span>Game Hub</span>
         </div>
+        <div class="tooltip-text">Your game center!</div>
     </div>
-    <div class="tooltip-text">Game Hub – Twoje centrum najlepszych gier!</div>
 </div>
-
-<div class="text-center">
+<div class="text-center" style="margin-top: 0px;">
     <a href="/Games/Browse" class="btn btn-primary m-2">Games</a>
     <a href="/Scores/Results" class="btn btn-primary m-2">Scores</a>
 </div>
