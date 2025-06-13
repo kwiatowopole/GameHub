@@ -7,11 +7,12 @@
 
     <div class="text-center mt-4">
         <button id="toggleRankingBtn" class="btn btn-outline-success">See ranking</button>
+        <button id="addToFavBtn" class="btn btn-outline-danger">Add to Favorite</button>
     </div>
 
     <div id="rankingModal"
          style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
-                width: 90%; max-width: 600px; background: white; border: 2px solid #444;
+                width: 100%; max-width: 800px; background: white; border: 2px solid #444;
                 padding: 20px; z-index: 9999; box-shadow: 0 0 20px rgba(0,0,0,0.4); border-radius: 10px;">
         <div class="text-end">
             <button id="hideRankingBtn" class="btn btn-sm btn-danger">×</button>
@@ -22,58 +23,74 @@
 
 @section Scripts {
     <script>
-        function saveScore(points, gameName) {
-            fetch("/Scores/SaveScore", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    points: points,
-                    gameName: gameName
-                })
+function saveScore(points, gameName) {
+    fetch("/Scores/SaveScore", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            points: points,
+            gameName: gameName
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            console.log("Score has been saved");
+        } else {
+            console.warn("Data haven't been saved due to " + data.message);
+        }
+    })
+    .catch(err => console.error("Error with connection to the BackEnd:", err));
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggleRankingBtn");
+    const hideBtn = document.getElementById("hideRankingBtn");
+    const modal = document.getElementById("rankingModal");
+    const container = document.getElementById("rankingContainer");
+    const addToFavBtn = document.getElementById("addToFavBtn");
+
+    let visible = false;
+
+    toggleBtn.addEventListener("click", () => {
+        if (!visible) {
+            fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                    modal.style.display = "block";
+                    toggleBtn.textContent = "Hide Ranking";
+                    visible = true;
+                });
+        } else {
+            modal.style.display = "none";
+            toggleBtn.textContent = "See Ranking";
+            visible = false;
+        }
+    });
+
+    hideBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        toggleBtn.textContent = "See Ranking";
+        visible = false;
+    });
+
+    if (addToFavBtn) {
+        addToFavBtn.onclick = function() {
+            fetch('/FavGames/Add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId: @ViewBag.GameId })
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
-                    console.log("Score has been saved");
-                } else {
-                    console.warn("Data haven't been saved due to " + data.message);
-                }
-            })
-            .catch(err => console.error("Error with connection to the BackEnd:", err));
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleBtn = document.getElementById("toggleRankingBtn");
-            const hideBtn = document.getElementById("hideRankingBtn");
-            const modal = document.getElementById("rankingModal");
-            const container = document.getElementById("rankingContainer");
-
-            let visible = false;
-
-            toggleBtn.addEventListener("click", () => {
-                if (!visible) {
-                    fetch(`/Scores/RankingPartial?game=@ViewBag.GameName`)
-                        .then(res => res.text())
-                        .then(html => {
-                            container.innerHTML = html;
-                            modal.style.display = "block";
-                            toggleBtn.textContent = "Hide Ranking";
-                            visible = true;
-                        });
-                } else {
-                    modal.style.display = "none";
-                    toggleBtn.textContent = "See Ranking";
-                    visible = false;
-                }
+                if (data.success) alert('Added to favorites');
+                else alert('Error: ' + data.message);
             });
-
-            hideBtn.addEventListener("click", () => {
-                modal.style.display = "none";
-                toggleBtn.textContent = "See Ranking";
-                visible = false;
-            });
-        });
+        };
+    }
+});
     </script>
 }

@@ -153,43 +153,48 @@ namespace GameHub.Controllers
         }
 
         public ActionResult SimonSays() {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View(); }
 
         public ActionResult AimTrainer() {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View(); }
 
         public ActionResult Reflex()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 
         public ActionResult HoverPointer()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 
         public ActionResult GridExperiment()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 

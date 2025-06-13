@@ -128,35 +128,34 @@
 
         <div class="sidebar">
 
-            <a href="@Url.Action("Index", "Home")" class="icon-link" title="Strona główna">
+            <a href="@Url.Action("Index", "Home")" class="icon-link" title="Main page">
                 <i class="bi bi-house-door-fill"></i>
                 <span class="icon-label">Home</span>
             </a>
-            <a href="@Url.Action("About", "Home")" class="icon-link" title="O aplikacji">
+            <a href="@Url.Action("About", "Home")" class="icon-link" title="About the app">
                 <i class="bi bi-info-circle-fill"></i>
                 <span class="icon-label">About</span>
             </a>
-            <a href="@Url.Action("Contact", "Home")" class="icon-link" title="Kontakt">
+            <a href="@Url.Action("Contact", "Home")" class="icon-link" title="Contact">
                 <i class="bi bi-envelope-fill"></i>
                 <span class="icon-label">Contact</span>
             </a>
 
-            <!-- Ikona serduszka -->
-            <a href="@Url.Action("Favorites", "Home")" class="icon-link" title="Ulubione">
+            <a href="@Url.Action("Index", "FavGames")" class="icon-link" title="Favorites">
                 <i class="bi bi-heart-fill"></i>
                 <span class="icon-label">Favorites</span>
             </a>
 
             @if (Session["userId"] != null)
             {
-                <a href="/Users/Logout" class="icon-link" title="Wyloguj">
+                <a href="/Users/Logout" class="icon-link" title="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="icon-label">Logout</span>
                 </a>
             }
             else
             {
-                <a href="@Url.Action("Login", "Users")" class="icon-link" title="Zaloguj się">
+                <a href="@Url.Action("Login", "Users")" class="icon-link" title="Login">
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span class="icon-label">Login</span>
                 </a>

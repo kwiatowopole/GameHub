@@ -1,0 +1,16 @@
+﻿@model IEnumerable<GameHub.Models.Game>
+@{
+    ViewBag.Title = "Favorite games";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Favorite games</h2>
+<div class="games-grid">
+    @foreach (var game in Model)
+    {
+        <div class="game-tile">
+            <div class="game-title">@game.name</div>
+            <a href="@Url.Action(game.name, "Games")" class="btn btn-primary mt-2">Play</a>
+        </div>
+    }
+</div>
