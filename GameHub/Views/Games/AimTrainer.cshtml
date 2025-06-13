@@ -206,6 +206,7 @@
         finalScoreDisplay.textContent = score;
         finalLevelDisplay.textContent = currentLevel - 1;
         canvas.style.display = 'none';
+        saveScore(score, gameName);
     }
 
     restartBtn.addEventListener('click', () => {

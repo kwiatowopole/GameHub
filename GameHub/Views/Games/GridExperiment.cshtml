@@ -26,14 +26,25 @@
 <div class="text-center">
     <h5><span id="timerDisplay"></span></h5>
 </div>
-    <div class="text-center mt-3">
-        <button id="startBtn" class="btn btn-success">Start</button>
-        <p id="status"></p>
+<div class="text-center mt-3">
+    <button id="startBtn" class="btn btn-success" style="padding: 10px 20px; font-size: 18px;">Start</button>
+
+    <div id="gameOver" style="display:none; text-align: center; margin-top: 20px;">
+        <h2>Game over!</h2>
+        <p>Your final score: <span id="finalScore" style="font-weight: bold; font-size: 24px;">0</span></p>
+        <p>Level reached: <span id="finalLevel" style="font-weight: bold;">0</span></p>
+        <button id="restartBtn" class="btn btn-primary" style="margin-top: 10px;">Play again</button>
     </div>
+    <p id="status"></p>
+</div>
 
     <script>
         const grid = document.querySelectorAll('.cell');
         const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const gameOverDisplay = document.getElementById('gameOver');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const finalLevelDisplay = document.getElementById('finalLevel');
         const status = document.getElementById('status');
         const levelDisplay = document.getElementById('levelDisplay');
         const pointsDisplay = document.getElementById('pointsDisplay');
@@ -139,11 +150,14 @@
             clickable = false;
             clearInterval(timerInterval);
             timerDisplay.textContent = '';
-            status.textContent = `${message} Your score: ${points}`;
-            startBtn.disabled = false;
+            status.textContent = '';
+
+            finalScoreDisplay.textContent = points;
+            finalLevelDisplay.textContent = currentLevel;
+            gameOverDisplay.style.display = 'block';
+            startBtn.style.display = 'none';
             saveScore(points, gameName);
         }
-
         function nextRound() {
             currentLevel++;
             playSequence();
@@ -182,11 +196,21 @@
         });
 
         startBtn.addEventListener('click', () => {
+            resetGame();
+            playSequence();
+        });
+        restartBtn.addEventListener('click', () => {
+            resetGame();
+            playSequence();
+        });
+        function resetGame() {
             currentLevel = 1;
             points = 0;
             pointsDisplay.textContent = "0";
+            levelDisplay.textContent = "1";
             status.textContent = '';
-            startBtn.disabled = true;
-            playSequence();
-        });
+            gameOverDisplay.style.display = 'none';
+            startBtn.style.display = 'none';
+            resetGrid();
+        }
     </script>

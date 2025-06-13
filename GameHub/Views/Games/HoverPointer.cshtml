@@ -12,14 +12,29 @@
         height: 100%;
         overflow: hidden;
     }
+    #target {
+        transform-origin: center center;
+        transition: transform 0.2s ease;
+    }
 </style>
 
 <div class="text-center mt-2">
     <h2>Hover Cursor</h2>
-    <h4>Punkty: <span id="pointsDisplay">0</span></h4>
+    <h4>Points: <span id="pointsDisplay">0</span></h4>
 </div>
 
 <div id="gameArea" style="position: relative; width: 1000px; height: 700px; margin: 0 auto; background-color: #f0f0f0; overflow: hidden;">
+    <div id="overlayScreen" style="position: absolute; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: rgba(255,255,255,0.8);">
+        <div id="startPanel" style="text-align: center;">
+            <h2>Hover Pointer</h2>
+            <button id="startGameBtn" class="btn btn-success">Start</button>
+        </div>
+        <div id="gameOverPanel" style="display: none; text-align: center;">
+            <h2>Game over!</h2>
+            <p id="finalScore" class="fw-bold text-primary" style="font-size: 24px;"></p>
+            <button id="restartGameBtn" class="btn btn-success mt-2">Restart</button>
+        </div>
+    </div>
     <div id="target"
          style="position: absolute; width: 150px; height: 150px; background-color: #28a745; border-radius: 50%;">
     </div>
@@ -32,18 +47,17 @@
     </div>
 </div>
 
-<div class="text-center mt-3">
-    <button id="startBtn" class="btn btn-success">Start</button>
-    <p id="gameOverMessage" class="mt-2 text-danger fw-bold"></p>
-</div>
-
 <script>
+    const overlayScreen = document.getElementById("overlayScreen");
+    const startPanel = document.getElementById("startPanel");
+    const gameOverPanel = document.getElementById("gameOverPanel");
+    const startGameBtn = document.getElementById("startGameBtn");
+    const restartGameBtn = document.getElementById("restartGameBtn");
+    const finalScore = document.getElementById("finalScore");
     const gameArea = document.getElementById("gameArea");
     const target = document.getElementById("target");
     const timeBar = document.getElementById("timeBar");
     const pointsDisplay = document.getElementById("pointsDisplay");
-    const startBtn = document.getElementById("startBtn");
-    const gameOverMessage = document.getElementById("gameOverMessage");
     const gameName = '@ViewBag.GameName';
 
     let points = 0;
@@ -67,10 +81,8 @@
 
     function updateTargetSize() {
         const reduction = Math.floor(points / 2000) * 0.1;
-        const newSize = Math.max(60, 180 * (1 - reduction));
-        targetSize = newSize;
-        target.style.width = `${newSize}px`;
-        target.style.height = `${newSize}px`;
+        const scale = Math.max(0.33, 1 - reduction);
+        target.style.transform = `scale(${scale})`;
     }
 
     function updateDisplays() {
@@ -139,11 +151,14 @@
         timeLeft = 3.0;
         baseSpeed = 1.7;
         teleportEnabled = false;
-        gameOverMessage.textContent = "";
+
+        overlayScreen.style.display = "none";
+        startPanel.style.display = "none";
+        gameOverPanel.style.display = "none";
+
         updateTargetSize();
         placeTargetInitial();
         updateDisplays();
-        startBtn.disabled = true;
 
         startRealTimeMovement();
         startRandomDirectionChange();
@@ -156,9 +171,23 @@
             const centerY = rect.top + rect.height / 2;
             const dist = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-            if (dist < targetSize / 2) {
+            const computedStyle = window.getComputedStyle(target);
+            const transform = computedStyle.transform;
+
+            let scale = 1;
+            if (transform && transform !== 'none') {
+                const match = transform.match(/matrix\(([^,]+),/);
+                if (match) {
+                    scale = parseFloat(match[1]);
+                }
+            }
+
+            const visualRadius = (target.offsetWidth * scale) / 2;
+
+            if (dist < visualRadius) {
                 let baseGain = 20;
-                baseGain += Math.floor(points / 2000);
+                baseGain += Math.floor(points / 2000)*5;
+                baseGain += Math.floor(points / 3000)*5;
                 if (teleportEnabled) baseGain += 5;
                 points += baseGain;
                 timeLeft = Math.min(getMaxTime(), timeLeft + 0.03);
@@ -175,7 +204,7 @@
             updateDisplays();
 
             if (timeLeft <= 0) {
-                endGame("Game over!")
+                endGame("Game over!");
             }
         }, 100);
     }
@@ -185,10 +214,14 @@
         clearInterval(realTimeMoveInterval);
         clearInterval(directionChangeInterval);
         clearInterval(teleportInterval);
+
         target.style.backgroundColor = "#dc3545";
-        gameOverMessage.textContent = `Game over! Your score: ${points}`;
-        status.textContent = `${message} Your score: ${points}`;
-        startBtn.disabled = false;
+
+        overlayScreen.style.display = "flex";
+        startPanel.style.display = "none";
+        gameOverPanel.style.display = "block";
+        finalScore.textContent = `Your score: ${points}`;
+
         saveScore(points, gameName);
     }
 
@@ -197,5 +230,6 @@
         mouseY = e.clientY;
     });
 
-    startBtn.addEventListener('click', startGame);
+    startGameBtn.addEventListener('click', startGame);
+    restartGameBtn.addEventListener('click', startGame);
 </script>
