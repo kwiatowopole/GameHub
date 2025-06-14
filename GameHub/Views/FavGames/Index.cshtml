@@ -4,13 +4,97 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Favorite games</h2>
-<div class="games-grid">
-    @foreach (var game in Model)
-    {
-        <div class="game-tile">
-            <div class="game-title">@game.name</div>
-            <a href="@Url.Action(game.name, "Games")" class="btn btn-primary mt-2">Play</a>
-        </div>
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
     }
-</div>
+
+    .background-rectangle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1170px;
+        height: 660px;
+        background-color: #FFD1DC;
+        border-radius: 25px;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        box-shadow: 0 4px 15px rgba(255, 128, 160, 0.3);
+    }
+
+    .center-rectangle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1100px;
+        height: 600px;
+        background-color: #fffaf3;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        box-sizing: border-box;
+        z-index: 10;
+        overflow-y: auto;
+        color: #3F2E3E;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .game-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        text-decoration: none;
+        color: #3F2E3E;
+        padding: 14px 12px;
+        cursor: pointer;
+        height: 100%;
+    }
+
+    .game-title {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    h2 {
+        text-align: center;
+        z-index: 15;
+        margin-bottom: 20px;
+        color: #3F2E3E;
+    }
+</style>
+
+<main>
+    <h2>@ViewBag.Title</h2>
+    <div class="background-rectangle"></div>
+    <div class="center-rectangle">
+        <div class="games-grid">
+            @foreach (var game in Model)
+            {
+                <div class="game-tile">
+                    <div class="game-title">@game.name</div>
+                    <a href="@Url.Action(game.name, "Games")" class="btn btn-primary mt-2">Play</a>
+                </div>
+            }
+        </div>
+    </div>
+</main>
