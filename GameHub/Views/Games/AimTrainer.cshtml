@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_GameLayout.cshtml";
     ViewBag.GameName = "AimTrainer";
     ViewBag.ShowGameRanking = true;
+    ViewBag.GameId = 1;
 }
 
 <h1>Aim Trainer</h1>
@@ -182,6 +183,8 @@
 
         } else {
             score += PUNKTY_ZA_PUDLO;
+            timeLeft -= 1;
+            updateTimeDisplay();
             addFloatingPoints(event.clientX, event.clientY, PUNKTY_ZA_PUDLO);
         }
 
@@ -206,6 +209,7 @@
         finalScoreDisplay.textContent = score;
         finalLevelDisplay.textContent = currentLevel - 1;
         canvas.style.display = 'none';
+        saveScore(score, gameName);
     }
 
     restartBtn.addEventListener('click', () => {

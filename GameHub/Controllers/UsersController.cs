@@ -158,7 +158,7 @@ namespace GameHub.Controllers
         {
             if (db.Users.Any(u => u.username == username))
             {
-                ViewBag.Error = "Użytkownik już istnieje";
+                ViewBag.Error = "Username is taken";
                 return View();
             }
 
@@ -202,7 +202,7 @@ namespace GameHub.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.Error = "Nieprawidłowy login lub hasło.";
+            ViewBag.Error = "Password or username is incorrect.";
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

@@ -2,6 +2,7 @@
     Layout = "~/Views/Shared/_GameLayout.cshtml";
     ViewBag.GameName = "Reflex";
     ViewBag.ShowGameRanking = true;
+    ViewBag.GameId = 2;
     }
 
 <h1>Reflex</h1>
@@ -17,8 +18,9 @@
     <div id="resultScreen" style="display:none; text-align: center; z-index: 2;">
         <h2>Reflex level:</h2>
         <p id="reflexLevel" style="font-weight: bold; font-size: 24px;">-</p>
-        <p>Result time: <span id="resultTime" style="font-weight: bold;">0.00</span> sekund</p>
-        <p>Result best time: <span id="resultBestTime" style="font-weight: bold;">0.00</span> sekund</p>
+        <p>Result time: <span id="resultTime" style="font-weight: bold;">0.00</span> ms</p>
+        <p>Result best time: <span id="resultBestTime" style="font-weight: bold;">0.00</span> ms</p>
+        <p>Score: <span id="score">0</span>/10000</p>
         <button id="nextBtn" style="padding: 10px 20px; font-size: 18px; margin-top: 10px; cursor: pointer;">Next</button>
     </div>
 </div>
@@ -34,7 +36,11 @@
     const nextBtn = document.getElementById('nextBtn');
     const flower = document.getElementById('flower');
     const gameContainer = document.getElementById('gameContainer');
+    const scoreDisplay = document.getElementById('score');
+    const gameName = '@ViewBag.GameName';
 
+
+    let totalScore = 0;
     let gameRunning = false;
     let targetVisible = false;
     let reactionStartTime = 0;
@@ -52,7 +58,7 @@
     function showTarget() {
         const delay = Math.random() * 2000 + 1000;
         timeoutId = setTimeout(() => {
-            const size = 48; 
+            const size = 48;
             const containerWidth = gameContainer.clientWidth;
             const containerHeight = gameContainer.clientHeight;
             const x = Math.random() * (containerWidth - size);
@@ -66,21 +72,47 @@
         }, delay);
     }
 
-    function evaluateReaction(time) {
-        const level = REFLEX_LEVELS.find(l => time >= l.threshold) || REFLEX_LEVELS[REFLEX_LEVELS.length - 1];
-        reflexLevelDisplay.textContent = level.text;
-        reflexLevelDisplay.style.color = level.color;
-        resultTimeDisplay.textContent = time.toFixed(2);
+    function evaluateReaction(time, earlyClick = false) {
+        let score = 0;
+        if (!earlyClick && time <= 2000) {
+            if (time <= 300) {
+                score = 2000;
+            } else {
+                score = Math.max(0, Math.round(((2000 - time) / 1600) * 2000));
+            }
+        }
+        if (earlyClick || time > 2000) score = 0;
 
-        if (time < bestTime) {
+        totalScore += score;
+        scoreDisplay.textContent = totalScore;
+
+        const level = REFLEX_LEVELS.find(l => time >= l.threshold) || REFLEX_LEVELS[REFLEX_LEVELS.length - 1];
+        reflexLevelDisplay.textContent = earlyClick ? "Too early!" : level.text;
+        reflexLevelDisplay.style.color = earlyClick ? "gray" : level.color;
+        resultTimeDisplay.textContent = earlyClick ? "-" : time.toFixed(2);
+        resultBestTimeDisplay.textContent = bestTime === Infinity ? "0.00" : bestTime.toFixed(2);
+
+        if (!earlyClick && time < bestTime) {
             bestTime = time;
             bestTimeDisplay.textContent = time.toFixed(2);
         }
-        resultBestTimeDisplay.textContent = bestTime.toFixed(2);
     }
 
     gameContainer.addEventListener('click', function (event) {
-        if (!gameRunning || !targetVisible) return;
+        const ignoredElements = [flower, resultScreen, startBtn, nextBtn];
+        if (ignoredElements.includes(event.target) || event.target.closest('button')) return;
+
+        if (!gameRunning) return;
+
+        if (!targetVisible) {
+            clearTimeout(timeoutId);
+            targetVisible = false;
+            gameRunning = false;
+            evaluateReaction(2000, true);
+            resultScreen.style.display = 'block';
+            return;
+        }
+
         const reactionTime = Date.now() - reactionStartTime;
         targetVisible = false;
         flower.style.display = 'none';
@@ -99,8 +131,11 @@
             gameRunning = false;
             flower.style.display = 'none';
             startBtn.style.display = 'block';
+            saveScore(totalScore, gameName);
             currentAttempt = 1;
             attemptDisplay.textContent = currentAttempt;
+            totalScore = 0;
+            scoreDisplay.textContent = totalScore;
         }
     });
 

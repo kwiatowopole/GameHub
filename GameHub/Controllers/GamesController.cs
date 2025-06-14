@@ -19,9 +19,9 @@ namespace GameHub.Controllers
         {
             { "SimonSays", ("Old school classic Simon Says", "/Content/gifs/simonsays.gif") },
             { "AimTrainer", ("Train your mouse precision", "/Content/gifs/aimtrainer.gif") },
-            { "Reflex", ("Check how fast your reflexes are", "/Content/gifs/reflex.gif") },
+            { "Reflex", ("How fast are your reflexes?", "/Content/gifs/reflex.gif") },
             { "HoverPointer", ("Can you follow the target precisely?", "/Content/gifs/hoverpointer.gif") },
-            { "GridExperiment", ("Check how good your photographic memory is", "/Content/gifs/gridexperiment.gif") }
+            { "GridExperiment", ("How good is your photographic memory?", "/Content/gifs/gridexperiment.gif") }
         };
 
         // GET: Games
@@ -153,43 +153,48 @@ namespace GameHub.Controllers
         }
 
         public ActionResult SimonSays() {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View(); }
 
         public ActionResult AimTrainer() {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View(); }
 
         public ActionResult Reflex()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 
         public ActionResult HoverPointer()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 
         public ActionResult GridExperiment()
         {
-            /*if (!AuthHelper.IsLoggedIn(Session))
+            if (!AuthHelper.IsLoggedIn(Session))
             {
-                return new HttpStatusCodeResult(403); // Forbidden
-            }*/
+                ViewBag.Message = "You have to be logged in to play";
+                return View("Forbidden");
+            }
             return View();
         }
 
