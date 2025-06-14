@@ -3,6 +3,9 @@
 }
 
 <div class="container mt-4">
+    <div class="d-flex justify-content-end">
+        <a href="@Url.Action("Browse", "Games")" class="btn btn-outline-primary mb-3">Back to games</a>
+    </div>
     @RenderBody()
 
     <div class="text-center mt-4">
@@ -10,7 +13,7 @@
         <button id="addToFavBtn"
                 class="btn @(ViewBag.IsFavorite ? "btn-danger" : "btn-outline-danger")"
                 data-is-fav="@(ViewBag.IsFavorite.ToString().ToLower())">
-                @(ViewBag.IsFavorite ? "Remove from Favorite" : "Add to Favorite")
+            @(ViewBag.IsFavorite ? "Remove from Favorite" : "Add to Favorite")
         </button>
     </div>
 
@@ -100,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 addToFavBtn.setAttribute("data-is-fav", newIsFav.toString());
                 addToFavBtn.textContent = newIsFav ? "Remove from Favorite" : "Add to Favorite";
 
-                // Toggle classes
                 addToFavBtn.classList.toggle("btn-outline-danger", !newIsFav);
                 addToFavBtn.classList.toggle("btn-danger", newIsFav);
             } else {
