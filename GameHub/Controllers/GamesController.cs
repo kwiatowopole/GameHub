@@ -158,6 +158,14 @@ namespace GameHub.Controllers
                 ViewBag.Message = "You have to be logged in to play";
                 return View("Forbidden");
             }
+            {
+                var game = db.Games.FirstOrDefault(g => g.name == "SimonSays");
+                if (game == null)
+                    return HttpNotFound();
+
+                ViewBag.GameId = game.gameId;
+                ViewBag.IsFavorite = AuthHelper.IsFavorite(game.gameId, Session);
+            }
             return View(); }
 
         public ActionResult AimTrainer() {
@@ -166,7 +174,16 @@ namespace GameHub.Controllers
                 ViewBag.Message = "You have to be logged in to play";
                 return View("Forbidden");
             }
-            return View(); }
+            {
+                var game = db.Games.FirstOrDefault(g => g.name == "AimTrainer");
+                if (game == null)
+                    return HttpNotFound();
+
+                ViewBag.GameId = game.gameId;
+                ViewBag.IsFavorite = AuthHelper.IsFavorite(game.gameId, Session);
+            }
+                return View(); 
+        }
 
         public ActionResult Reflex()
         {
@@ -175,7 +192,15 @@ namespace GameHub.Controllers
                 ViewBag.Message = "You have to be logged in to play";
                 return View("Forbidden");
             }
-            return View();
+            {
+                var game = db.Games.FirstOrDefault(g => g.name == "Reflex");
+                if (game == null)
+                    return HttpNotFound();
+
+                ViewBag.GameId = game.gameId;
+                ViewBag.IsFavorite = AuthHelper.IsFavorite(game.gameId, Session);
+            }
+                return View();
         }
 
         public ActionResult HoverPointer()
@@ -185,7 +210,15 @@ namespace GameHub.Controllers
                 ViewBag.Message = "You have to be logged in to play";
                 return View("Forbidden");
             }
-            return View();
+            {
+                var game = db.Games.FirstOrDefault(g => g.name == "HoverPointer");
+                if (game == null)
+                    return HttpNotFound();
+
+                ViewBag.GameId = game.gameId;
+                ViewBag.IsFavorite = AuthHelper.IsFavorite(game.gameId, Session);
+            }
+                return View();
         }
 
         public ActionResult GridExperiment()
@@ -195,7 +228,15 @@ namespace GameHub.Controllers
                 ViewBag.Message = "You have to be logged in to play";
                 return View("Forbidden");
             }
-            return View();
+            {
+                var game = db.Games.FirstOrDefault(g => g.name == "GridExperiment");
+                if (game == null)
+                    return HttpNotFound();
+
+                ViewBag.GameId = game.gameId;
+                ViewBag.IsFavorite = AuthHelper.IsFavorite(game.gameId, Session);
+            }
+                return View();
         }
 
         public ActionResult Browse()

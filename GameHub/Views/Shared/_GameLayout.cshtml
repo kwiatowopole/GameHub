@@ -7,7 +7,11 @@
 
     <div class="text-center mt-4">
         <button id="toggleRankingBtn" class="btn btn-outline-success">See ranking</button>
-        <button id="addToFavBtn" class="btn btn-outline-danger">Add to Favorite</button>
+        <button id="addToFavBtn"
+                class="btn @(ViewBag.IsFavorite ? "btn-danger" : "btn-outline-danger")"
+                data-is-fav="@(ViewBag.IsFavorite.ToString().ToLower())">
+                @(ViewBag.IsFavorite ? "Remove from Favorite" : "Add to Favorite")
+        </button>
     </div>
 
     <div id="rankingModal"
@@ -78,19 +82,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (addToFavBtn) {
-        addToFavBtn.onclick = function() {
-            fetch('/FavGames/Add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gameId: @ViewBag.GameId })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) alert('Added to favorites');
-                else alert('Error: ' + data.message);
-            });
-        };
-    }
+    addToFavBtn.addEventListener("click", function () {
+        const isFav = addToFavBtn.getAttribute("data-is-fav") === "true";
+        const gameId = @ViewBag.GameId;
+        const url = isFav ? '/FavGames/Remove' : '/FavGames/Add';
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameId: gameId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Toggle state
+                const newIsFav = !isFav;
+                addToFavBtn.setAttribute("data-is-fav", newIsFav.toString());
+                addToFavBtn.textContent = newIsFav ? "Remove from Favorite" : "Add to Favorite";
+
+                // Toggle classes
+                addToFavBtn.classList.toggle("btn-outline-danger", !newIsFav);
+                addToFavBtn.classList.toggle("btn-danger", newIsFav);
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(err => console.error("Request failed:", err));
+    });
+}
 });
     </script>
 }

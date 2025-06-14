@@ -13,10 +13,6 @@
 
 <p class="text-center">Remember and repeat the sequence!</p>
 
-<div class="text-center mt-2 mb-3">
-    <p id="countdown" style="font-size: 1.5em; color: darkred;"></p>
-</div>
-
 <div class="d-flex justify-content-center">
     <div id="grid" style="display: grid; grid-template-columns: repeat(3,100px);gap:10px;">
         @for (int i =0; i < 9; i++)
@@ -27,8 +23,9 @@
 </div>
 
 <div class="text-center mt-3">
+    <p id="countdown" style="font-size: 1.5em; color: darkred;"></p>
     <button id="startBtn" class="btn btn-primary">Start</button>
-    <p id="status" class="mt-2">Kliknij Start żeby zacząć</p>
+    <p id="status" class="mt-2">Click Start button to start</p>
     <p id="timer" class="mt-1 text-muted text-center"></p>
 </div>
 
@@ -75,7 +72,7 @@
                 setTimeout(() => {
                     clickable = true;
                     playerSequence = [];
-                    status.textContent = `Twoja kolej!`;
+                    status.textContent = `Your turn!`;
                     startResponseTimer();
                     animating = false;
                 }, 500);
